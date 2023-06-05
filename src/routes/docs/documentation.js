@@ -6,6 +6,6 @@ const fs = require('fs');
 const documentation = fs.readFileSync('./documentation.yml', 'utf8');
 const swaggerDocument = YAML.parse(documentation);
 
-router.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+router.use('/api/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 module.exports = router;

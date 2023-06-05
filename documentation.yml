@@ -1,0 +1,1102 @@
+openapi: 3.0.0
+
+info:
+  title: Factory API
+  description: OpenAPI for Factory RESTfull API
+  version: '1.0.0'
+  contact:
+    email: aufamuhammad19551@gmail.com
+
+servers:
+  - url: http://localhost:3000
+    description: Local
+  - url: https://api-factory-service-development.up.railway.app
+    description: Development
+  - url: https://api-factory-service-production.up.railway.app
+    description: Production
+
+tags: 
+  - name: Suppliers
+    description: CRUD Compomponent suppliers
+  - name: Components
+    description: CRUD Product components
+  - name: Products
+    description: CRUD Product
+  - name: ComponentSuppliers
+    description: Add and remove relation component and supplier
+  - name: ProductComponents
+    description: Add and remove relation product and component
+    
+paths:
+  /suppliers:
+    get:
+      tags:
+        - Suppliers
+      summary: Get list of suppliers
+      description: Get list of suppliers
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success get list of suppliers!
+                  data:
+                    $ref: "#/components/schemas/Suppliers"
+    post:
+      tags:
+        - Suppliers
+      summary: Create new supplier
+      description: Create new supplier
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierRequest"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success create new supplier!
+                  data:
+                    $ref: "#/components/schemas/Supplier" 
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Name and address is required!
+                  data:
+                    type: object
+  /suppliers/{id}:
+    get:
+      tags:
+        - Suppliers
+      summary: Get detail of supplier
+      description: Get detail of supplier
+      parameters:
+        - in: path
+          name: id
+          description: Id of supplier
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success get details of supplier with id 1!
+                  data:
+                    $ref: "#/components/schemas/Supplier"
+        "404":
+          description: Not Foud
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Supplier with id 1 not found!
+                  data:
+                    type: object
+    put:
+      tags:
+        - Suppliers
+      summary: Update supplier
+      description: Update supplier
+      parameters:
+        - in: path
+          name: id
+          description: Id of supplier
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierRequest"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success update supplier with id 1!
+                  data:
+                    $ref: "#/components/schemas/Supplier"
+        "404":
+          description: Not Foud
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Supplier with id 1 not found!
+                  data:
+                    type: object
+    delete:
+      tags:
+        - Suppliers
+      summary: delete supplier
+      description: delete supplier
+      parameters:
+        - in: path
+          name: id
+          description: Id of supplier
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success delete supplier with id 1!
+                  data:
+                    $ref: "#/components/schemas/Supplier"
+        "404":
+          description: Not Foud
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Supplier with id 1 not found!
+                  data:
+                    type: object
+  /components:
+    get:
+      tags:
+        - Components
+      summary: Get list of components
+      description: Get list of components
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success get list of components!
+                  data:
+                    $ref: "#/components/schemas/Components"
+    post:
+      tags:
+        - Components
+      summary: Create new component
+      description: Create new component
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComponentRequest"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success create new component!
+                  data:
+                    $ref: "#/components/schemas/Component" 
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Name and description is required!
+                  data:
+                    type: object
+  /components/{id}:
+    get:
+      tags:
+        - Components
+      summary: Get detail of component
+      description: Get detail of component
+      parameters:
+        - in: path
+          name: id
+          description: Id of component
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success get details of component with id 1!
+                  data:
+                    $ref: "#/components/schemas/Component"
+        "404":
+          description: Not Foud
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Component with id 1 not found!
+                  data:
+                    type: object
+    put:
+      tags:
+        - Components
+      summary: Update component
+      description: Update component
+      parameters:
+        - in: path
+          name: id
+          description: Id of component
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComponentRequest"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success update component with id 1!
+                  data:
+                    $ref: "#/components/schemas/Component"
+        "404":
+          description: Not Foud
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Component with id 1 not found!
+                  data:
+                    type: object
+    delete:
+      tags:
+        - Components
+      summary: delete component
+      description: delete component
+      parameters:
+        - in: path
+          name: id
+          description: Id of component
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success delete component with id 1!
+                  data:
+                    $ref: "#/components/schemas/Component"
+        "404":
+          description: Not Foud
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Component with id 1 not found!
+                  data:
+                    type: object
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Get list of products
+      description: Get list of products
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success get list of products!
+                  data:
+                    $ref: "#/components/schemas/Products"
+    post:
+      tags:
+        - Products
+      summary: Create new product
+      description: Create new product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductRequest"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success create new product!
+                  data:
+                    $ref: "#/components/schemas/Product" 
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Name and quantity is required!
+                  data:
+                    type: object
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get detail of product
+      description: Get detail of product
+      parameters:
+        - in: path
+          name: id
+          description: Id of product
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success get details of product with id 1!
+                  data:
+                    $ref: "#/components/schemas/Product"
+        "404":
+          description: Not Foud
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Product with id 1 not found!
+                  data:
+                    type: object
+    put:
+      tags:
+        - Products
+      summary: Update product
+      description: Update product
+      parameters:
+        - in: path
+          name: id
+          description: Id of product
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductRequest"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success update product with id 1!
+                  data:
+                    $ref: "#/components/schemas/Product"
+        "404":
+          description: Not Foud
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Product with id 1 not found!
+                  data:
+                    type: object
+    delete:
+      tags:
+        - Products
+      summary: delete product
+      description: delete product
+      parameters:
+        - in: path
+          name: id
+          description: Id of product
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success delete product with id 1!
+                  data:
+                    $ref: "#/components/schemas/Product"
+        "404":
+          description: Not Foud
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Product with id 1 not found!
+                  data:
+                    type: object
+  /componentSuppliers:
+    post:
+      tags:
+        - ComponentSuppliers
+      summary: Add relation component and supplier 
+      description: Add relation component and supplier
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComponentSuppliersRequest"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success create relation component and supplier!
+                  data:
+                    type: object
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Component_id and Supplier_id is required!
+                  data:
+                    type: object
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Relation component and supplier already exist!
+                  data:
+                    type: object
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Component with id 1 not found!
+                  data:
+                    type: object
+    delete:
+      tags:
+        - ComponentSuppliers
+      summary: Remove relation component and supplier 
+      description: Remove relation component and supplier
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComponentSuppliersRequest"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success delete relation component and supplier!
+                  data:
+                    type: object
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Component_id and Supplier_id is required!
+                  data:
+                    type: object
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Relation component and supplier not found!
+                  data:
+                    type: object
+  /productComponents:
+    post:
+      tags:
+        - ProductComponents
+      summary: Add relation product and component
+      description: Add relation product and component
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductComponentRequest"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success create relation product and component!
+                  data:
+                    type: object
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Product_id and Component_id is required!
+                  data:
+                    type: object
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Relation product and component already exist!
+                  data:
+                    type: object
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Product with id 1 not found!
+                  data:
+                    type: object
+    delete:
+      tags:
+        - ProductComponents
+      summary: Remove relation product and component 
+      description: Remove relation product and component
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductComponentRequest"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: true
+                  message: 
+                    type: string
+                    example: Success delete relation product and component!
+                  data:
+                    type: object
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Product_id and Component_id is required!
+                  data:
+                    type: object
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status: 
+                    type: boolean
+                    example: false
+                  message: 
+                    type: string
+                    example: Relation product and component not found!
+                  data:
+                    type: object
+            
+components:
+  securitySchemes:
+    jwt_token:
+      type: apiKey
+      in: header
+      name: token
+  schemas:
+    SupplierRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: company 1
+        address:
+          type: string
+          example: Jakarta Timur
+    Supplier:
+      type: object
+      properties:
+        id: 
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: company 1
+        address:
+          type: string
+          example: Jakarta Timur
+        supplied_components:
+          $ref: "#/components/schemas/Components"
+
+    Suppliers:
+      type: array
+      items:
+        anyOf:
+          - type: object
+            properties:
+              id: 
+                type: integer
+                example: 1
+              name:
+                type: string
+                example: company 1
+              address:
+                type: string
+                example: Jakarta Timur
+          - type: object
+            properties:
+              id: 
+                type: integer
+                example: 2
+              name:
+                type: string
+                example: company 2
+              address:
+                type: string
+                example: Jakarta Utara
+          - type: object
+            properties:
+              id: 
+                type: integer
+                example: 3
+              name:
+                type: string
+                example: company 3
+              address:
+                type: string
+                example: Jakarta Selatan
+    ComponentRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: component 1
+        description:
+          type: string
+          example: component 1 description
+    Component:
+      type: object
+      properties:
+        id: 
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: component 1
+        description:
+          type: string
+          example: component 1 description
+        suppliers:
+          $ref: "#/components/schemas/Suppliers"
+    Components:
+      type: array
+      items:
+        anyOf:
+          - type: object
+            properties:
+              id: 
+                type: integer
+                example: 1
+              name:
+                type: string
+                example: component 1
+              description:
+                type: string
+                example: component 1 description
+          - type: object
+            properties:
+              id: 
+                type: integer
+                example: 2
+              name:
+                type: string
+                example: component 2
+              description:
+                type: string
+                example: component 2 description
+          - type: object
+            properties:
+              id: 
+                type: integer
+                example: 3
+              name:
+                type: string
+                example: component 3
+              description:
+                type: string
+                example: component 3 description
+    ProductRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: product 1
+        quantity:
+          type: integer
+          example: 10
+    Product:
+      type: object
+      properties:
+        id: 
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: product 1
+        quantity:
+          type: integer
+          example: 10
+        components_used:
+          $ref: "#/components/schemas/Components"
+    Products:
+      type: array
+      items:
+        anyOf:
+          - type: object
+            properties:
+              id: 
+                type: integer
+                example: 1
+              name:
+                type: string
+                example: product 1
+              quantity:
+                type: integer
+                example: 10
+          - type: object
+            properties:
+              id: 
+                type: integer
+                example: 2
+              name:
+                type: string
+                example: product 2
+              quantity:
+                type: integer
+                example: 20
+          - type: object
+            properties:
+              id: 
+                type: integer
+                example: 3
+              name:
+                type: string
+                example: product 3
+              quantity:
+                type: integer
+                example: 30
+    ComponentSuppliersRequest:
+      type: object
+      properties:
+        component_id:
+          type: integer
+          example: 1
+        supplier_id:
+          type: integer
+          example: 1
+    ProductComponentRequest:
+      type: object
+      properties:
+        product_id:
+          type: integer
+          example: 1
+        component_id:
+          type: integer
+          example: 1
+        
+
+        
+        
+
+  

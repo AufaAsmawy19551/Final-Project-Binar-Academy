@@ -6,14 +6,16 @@ const passenger = require('./service/passenger');
 const admin = require('./service/admin');
 const web = require('./service/web');
 
-router.use(web);
-router.use(admin);
-router.use(passenger);
-router.use(documentation);
-
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', function (req, res, next) {
+	res.render('index', { title: 'Express' });
+});
+
+router.prefix('/api', async (route) => {
+	route.use(web);
+	route.use(admin);
+	route.use(passenger);
+	route.use(documentation);
 });
 
 module.exports = router;

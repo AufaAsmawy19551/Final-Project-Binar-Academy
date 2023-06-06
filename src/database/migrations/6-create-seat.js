@@ -10,7 +10,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       airplane_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+					model: 'Airplanes',
+					key: 'id',
+				},
+				onUpdate: 'CASCADE',
+				onDelete: 'CASCADE',
       },
       number: {
         type: Sequelize.INTEGER

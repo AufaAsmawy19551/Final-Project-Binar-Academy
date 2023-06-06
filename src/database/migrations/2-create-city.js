@@ -10,7 +10,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       country_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Countries',
+          key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       name: {
         type: Sequelize.STRING

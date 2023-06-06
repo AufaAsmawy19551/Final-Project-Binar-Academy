@@ -3,7 +3,10 @@ router = require('../../utils/routeGrouping');
 const middlewares = require('../../utils/middlewares');
 const product = require('../../controllers/product');
 
-router.prefix('/passenger', async (route) => {
+router.prefix(
+	'/customer',
+	async (route) => {
+
 		route.prefix('/products', async (route) => {
 			route.get('/', product.index);
 			route.post('/', product.store);

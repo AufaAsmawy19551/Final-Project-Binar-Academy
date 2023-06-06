@@ -59,6 +59,12 @@ module.exports = {
             airplane_id: 3,
             createdAt: new Date(),
 					  updatedAt: new Date(),        
+          },
+          {
+            facility_id: 4,
+            airplane_id: 1,
+            createdAt: new Date(),
+					  updatedAt: new Date(),        
           }
         ], 
       {});

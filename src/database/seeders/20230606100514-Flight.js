@@ -8,7 +8,7 @@ module.exports = {
       [
         {
           route_id: 1,
-          airplane_class_id: 3,
+          airplane_id: 3,
           departure_date: new Date("2023-06-21T07:30:00.000Z"),
           arrival_date: new Date("2023-06-23T08:30:00.000Z"),
           price: 1500000,

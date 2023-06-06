@@ -12,7 +12,7 @@ module.exports = {
       route_id: {
         type: Sequelize.INTEGER
       },
-      airplane_class_id: {
+      airplane_id: {
         type: Sequelize.INTEGER
       },
       departure_date: {

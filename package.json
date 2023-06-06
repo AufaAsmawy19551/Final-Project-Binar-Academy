@@ -5,7 +5,8 @@
 	"scripts": {
 		"start": "node ./src/bin/www",
 		"dev": "nodemon ./src/bin/www",
-		"test": "jest --runInBand"
+		"test": "jest --runInBand",
+		"db:reset": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
 	},
 	"dependencies": {
 		"cookie-parser": "~1.4.4",
@@ -18,6 +19,7 @@
 		"morgan": "~1.9.1",
 		"pg": "^8.11.0",
 		"sequelize": "^6.32.0",
+		"sequelize-cli": "^6.6.1",
 		"swagger-ui-express": "^4.6.3",
 		"validatorjs": "^3.22.1",
 		"yaml": "^2.3.1"

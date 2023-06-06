@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   Transaction.init({
     customer_id: DataTypes.INTEGER,
     date: DataTypes.DATE,
+    payment_date: DataTypes.DATE,
+    payment_due_date: DataTypes.DATE,
     status: DataTypes.STRING
   }, {
     sequelize,

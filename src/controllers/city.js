@@ -30,7 +30,7 @@ module.exports = {
 	store: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				country_id: 'required|integer|exist:Countries,i',
+				country_id: 'required|integer|exist:Countries,id',
 				name: 'required|string|between:1,255',
 			});
 

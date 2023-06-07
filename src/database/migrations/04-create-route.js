@@ -11,21 +11,9 @@ module.exports = {
 			},
 			departure_airport_id: {
 				type: Sequelize.INTEGER,
-				references: {
-					model: 'Airports',
-					key: 'id',
-				},
-				onUpdate: 'CASCADE',
-				onDelete: 'CASCADE',
 			},
 			arrival_airport_id: {
 				type: Sequelize.INTEGER,
-				references: {
-					model: 'Airports',
-					key: 'id',
-				},
-				onUpdate: 'CASCADE',
-				onDelete: 'CASCADE',
 			},
 			createdAt: {
 				allowNull: false,

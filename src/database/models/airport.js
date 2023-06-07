@@ -11,11 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
 
       Airport.belongsTo(models.City, { foreignKey: "id", as: "cities" });
-      Airport.belongsToMany(models.Flight, {
-        foreignKey: "id",
-        as: "routes",
-        through: models.Route,
-      });
+      Airport.hasMany(models.Flight, { foreignKey: 'departure_airport_id', as: 'outcomming_flights' });
+      Airport.hasMany(models.Flight, { foreignKey: "arrival_airport_id", as: "incomming_flights"});
     }
   }
   Airport.init(

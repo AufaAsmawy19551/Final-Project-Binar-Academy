@@ -1,5 +1,5 @@
 const modelName = 'City';
-const { City: Model, sequelize } = require('../database/models');
+const { City: Model, Country, Airport, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
 
 module.exports = {
@@ -56,7 +56,20 @@ module.exports = {
 
 	show: async (req, res, next) => {
 		try {
-			const details = await Model.findOne({ where: { id: req.params.id } });
+			const details = await Model.findOne({ 
+				where: { id: req.params.id },
+				include: [
+					{
+						model: Airport,
+						as: 'airports'
+					},
+					{
+						model: Country,
+						as: 'country'
+					}
+				]
+			 
+			});
 
 			if (!details) {
 				return res.status(404).json({

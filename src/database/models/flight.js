@@ -12,15 +12,18 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      // relasi many-to-many -> Airport through: Route
-      Flight.belongsToMany(models.Airport, {foreignKey: 'id', as: 'routes', through: models.Route});
+      // relasi many-to-many -> Airport
+      Flight.belongsTo(models.Airport, {foreignKey: 'departure_airport_id', as: 'departure_airport'});
+      Flight.belongsTo(models.Airport, {foreignKey: 'arrival_airport_id', as: 'destination_airport'});
+      Flight.belongsTo(models.Airplane, {foreignKey: 'airplane_id', as: 'airplane'});
 
       // relasi many-to-many -> Transaction through: TransactionDetail
       Flight.belongsToMany(models.Transaction, {foreignKey: 'id', as: 'transaction', through: models.TransactionDetail});
     }
   }
   Flight.init({
-    route_id: DataTypes.INTEGER,
+    departure_airport_id: DataTypes.INTEGER,
+    arrival_airport_id: DataTypes.INTEGER,
     airplane_id: DataTypes.INTEGER,
     departure_date: DataTypes.DATE,
     arrival_date: DataTypes.DATE,

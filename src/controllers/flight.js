@@ -1,6 +1,7 @@
 const modelName = 'Flight';
-const { Flight: Model, sequelize } = require('../database/models');
+const { Flight: Model, Airport, Airplane, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
+const airport = require('./airport');
 
 module.exports = {
 	index: async (req, res, next) => {
@@ -30,7 +31,8 @@ module.exports = {
 	store: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				route_id: 'required|integer|exist:Routes,id',
+				departure_airport_id: 'required|integer|exist:Airports,id',
+				arrival_airport_id: 'required|integer|exist:Airports,id',
 				airplane_id: 'required|integer|exist:Airplanes,id',
 				departure_date: 'required|date',
 				arrival_date: `required|date`,
@@ -62,7 +64,23 @@ module.exports = {
 
 	show: async (req, res, next) => {
 		try {
-			const details = await Model.findOne({ where: { id: req.params.id } });
+			const details = await Model.findOne({
+				where: { id: req.params.id },
+				include: [
+					{
+						model: Airplane,
+						as: 'airplane',
+					},
+					{
+						model: Airport,
+						as: 'departure_airport',
+					},
+					{
+						model: Airport,
+						as: 'destination_airport',
+					},
+				],
+			});
 
 			if (!details) {
 				return res.status(404).json({
@@ -85,7 +103,15 @@ module.exports = {
 	update: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'alpha|between:1,255',
+				departure_airport_id: 'integer|exist:Airports,id',
+				arrival_airport_id: 'integer|exist:Airports,id',
+				airplane_id: 'integer|exist:Airplanes,id',
+				departure_date: 'date',
+				arrival_date: `date`,
+				price: 'integer|min:0',
+				discount: 'min:0|max:100',
+				tax: 'min:0|max:100',
+				stock: 'integer|min:0|max:72',
 			});
 
 			if (validation.failed) {

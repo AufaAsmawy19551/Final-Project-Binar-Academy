@@ -3,6 +3,7 @@ router = require('../../utils/routeGrouping');
 const middlewares = require('../../utils/middlewares');
 const product = require('../../controllers/product');
 const country = require('../../controllers/country');
+const airplane = require('../../controllers/airplane');
 
 router.prefix(
 	'/admin',
@@ -14,6 +15,14 @@ router.prefix(
 			route.get('/:id', country.show);
 			route.put('/:id', country.update);
 			route.delete('/:id', country.destroy);
+		});
+
+		route.prefix('/airplanes', async (route) => {
+			route.get('/', airplane.index);
+			route.post('/', airplane.store);
+			route.get('/:id', airplane.show);
+			route.put('/:id', airplane.update);
+			route.delete('/:id', airplane.destroy);
 		});
 
 		route.prefix('/products', async (route) => {

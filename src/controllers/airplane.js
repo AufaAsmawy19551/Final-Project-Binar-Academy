@@ -30,7 +30,10 @@ module.exports = {
 	store: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'required|alpha|between:1,255',
+				class_id: 'required|integer|exist:Classes,id',
+				name: 'required|string|between:1,255',
+				logo: 'required|string|between:1,255',
+				code: 'required|string|between:1,255',
 			});
 
 			if (validation.failed) {
@@ -86,7 +89,10 @@ module.exports = {
 	update: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'alpha|between:1,255',
+				class_id: 'integer|exist:Classes',
+				name: 'string|between:1,255',
+				logo: 'string|between:1,255',
+				code: 'string|between:1,255',
 			});
 
 			if (validation.failed) {

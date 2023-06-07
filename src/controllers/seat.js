@@ -1,5 +1,5 @@
-const modelName = 'Country';
-const { Country: Model, sequelize } = require('../database/models');
+const modelName = 'Seat';
+const { Seat: Model, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
 
 module.exports = {

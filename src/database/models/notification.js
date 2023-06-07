@@ -11,6 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      // relasi many-to-one -> Category
+      Notification.belongsTo(models.Category, {foreignKey: 'id', as: 'category'});
+
+      // relasi many-to-many -> Customer through: CustomerNotification
+      Notification.belongsToMany(models.Customer, {foreignKey: 'notification_id', as: 'notification', through: models.CustomerNotification});
     }
   }
   Notification.init({

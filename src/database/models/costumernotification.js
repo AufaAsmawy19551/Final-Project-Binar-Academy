@@ -10,7 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // relasi many-to-one -> Notification
+      CustomerNotification.belongsTo(models.Notification, {foreignKey: 'id', as: 'Notification'});
+      // relasi many-to-one -> Customer
+      CustomerNotification.belongsTo(models.Customer, {foreignKey: 'id', as: 'Customer'});
     }
   }
   CostumerNotification.init({

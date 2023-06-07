@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   AirplaneFacility.init({
-    class_id: DataTypes.INTEGER,
+    facility_id: DataTypes.INTEGER,
     airplane_id: DataTypes.INTEGER
   }, {
     sequelize,

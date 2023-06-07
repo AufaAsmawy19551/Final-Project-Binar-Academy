@@ -30,7 +30,14 @@ module.exports = {
 	store: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'required|alpha|between:1,255',
+				route_id: 'required|integer|exist:Routes,id',
+				airplane_id: 'required|integer|exist:Airplanes,id',
+				departure_date: 'required|date',
+				arrival_date: `required|date`,
+				price: 'required|integer|min:0',
+				discount: 'integer|min:0|max:100',
+				tax: 'integer|min:0|max:100',
+				stock: 'required|integer|min:0|max:72',
 			});
 
 			if (validation.failed) {

@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Seat.init({
     airplane_id: DataTypes.INTEGER,
-    number: DataTypes.INTEGER
+    number: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Seat',

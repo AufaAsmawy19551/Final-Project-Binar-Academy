@@ -44,9 +44,9 @@ module.exports = {
 				});
 			}
 		}
-		await queryInterface.bulkInsert('Classes', seats, {});
+		await queryInterface.bulkInsert('Seats', seats, {});
 	},
 	async down(queryInterface, Sequelize) {
-		await queryInterface.bulkDelete('Seat', seats, {});
+		await queryInterface.bulkDelete('Seats', seats, {});
 	},
 };

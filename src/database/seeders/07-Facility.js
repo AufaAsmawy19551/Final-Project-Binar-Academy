@@ -17,6 +17,11 @@ module.exports = {
 					updatedAt: new Date(),
         },
         {
+          name: 'hiburan di dalam pesawat',
+          createdAt: new Date(),
+					updatedAt: new Date(),
+        },
+        {
           name: 'makanan mewah',
           createdAt: new Date(),
 					updatedAt: new Date(),

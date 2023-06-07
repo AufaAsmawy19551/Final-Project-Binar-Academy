@@ -1,5 +1,5 @@
 const modelName = 'TransactionDetail';
-const { TransactionDetail: Model, Airplane, sequelize } = require('../database/models');
+const { TransactionDetail: Model, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
 
 module.exports = {

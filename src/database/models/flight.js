@@ -11,6 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      // relasi many-to-many -> Airport through: Route
+      Flight.belongsToMany(models.Airport, {foreignKey: 'id', as: 'routes', through: models.Route});
+
+      // relasi many-to-many -> Transaction through: TransactionDetail
+      Flight.belongsToMany(models.Transaction, {foreignKey: 'id', as: 'transaction', through: models.TransactionDetail});
     }
   }
   Flight.init({

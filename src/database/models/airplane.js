@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       
-       // relasi one-to-many -> channel
+       // relasi one-to-many -> seat
        Airplane.hasMany(models.Seat, {foreignKey: 'airplane_id', as: 'seats'});
     }
   }

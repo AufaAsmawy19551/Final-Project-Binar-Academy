@@ -1,133 +1,147 @@
-const modelName = 'Transaction';
-const { Transaction: Model, sequelize } = require('../database/models');
-const Validator = require('../utils/validatorjs');
+const modelName = "Transaction";
+const { Transaction: Model, sequelize } = require("../database/models");
+const Validator = require("../utils/validatorjs");
 
 module.exports = {
-	index: async (req, res, next) => {
-		try {
-			const validation = await Validator.validate(req.query, {});
+  index: async (req, res, next) => {
+    try {
+      const validation = await Validator.validate(req.query, {});
 
-			if (validation.failed) {
-				return res.status(400).json({
-					success: false,
-					message: 'Bad Request',
-					data: validation.errors,
-				});
-			}
+      if (validation.failed) {
+        return res.status(400).json({
+          success: false,
+          message: "Bad Request",
+          data: validation.errors,
+        });
+      }
 
-			const list = await Model.findAll();
+      const list = await Model.findAll();
 
-			return res.status(200).json({
-				success: true,
-				message: `Success get list of ${modelName}s!`,
-				data: list,
-			});
-		} catch (error) {
-			next(error);
-		}
-	},
+      return res.status(200).json({
+        success: true,
+        message: `Success get list of ${modelName}s!`,
+        data: list,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 
-	store: async (req, res, next) => {
-		try {
-			const validation = await Validator.validate(req.body, {
-				name: 'required|alpha|between:1,255',
-			});
+  store: async (req, res, next) => {
+    try {
+      const validation = await Validator.validate(req.body, {
+        customer_id: "required|integer|exist:Customers,id",
+        date: "required|date",
+        payment_date: "required|date",
+        payment_due_date: "required|date",
+        status: "string|min:0|max:255",
+      });
 
-			if (validation.failed) {
-				return res.status(400).json({
-					success: false,
-					message: 'Bad Request',
-					data: validation.errors,
-				});
-			}
+      if (validation.failed) {
+        return res.status(400).json({
+          success: false,
+          message: "Bad Request",
+          data: validation.errors,
+        });
+      }
 
-			const created = await Model.create(req.body);
+      const created = await Model.create(req.body);
 
-			return res.status(200).json({
-				success: true,
-				message: `Success create new ${modelName}!`,
-				data: created,
-			});
-		} catch (error) {
-			next(error);
-		}
-	},
+      return res.status(200).json({
+        success: true,
+        message: `Success create new ${modelName}!`,
+        data: created,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 
-	show: async (req, res, next) => {
-		try {
-			const details = await Model.findOne({ where: { id: req.params.id } });
+  show: async (req, res, next) => {
+    try {
+      const details = await Model.findOne({ where: { id: req.params.id } });
 
-			if (!details) {
-				return res.status(404).json({
-					success: false,
-					message: `${modelName} with id ${req.params.id} not found!`,
-					error: {},
-				});
-			}
+      if (!details) {
+        return res.status(404).json({
+          success: false,
+          message: `${modelName} with id ${req.params.id} not found!`,
+          error: {},
+        });
+      }
 
-			return res.status(200).json({
-				success: true,
-				message: `Success get details of ${modelName} with id ${req.params.id}!`,
-				data: details,
-			});
-		} catch (error) {
-			next(error);
-		}
-	},
+      return res.status(200).json({
+        success: true,
+        message: `Success get details of ${modelName} with id ${req.params.id}!`,
+        data: details,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 
-	update: async (req, res, next) => {
-		try {
-			const validation = await Validator.validate(req.body, {
-				name: 'alpha|between:1,255',
-			});
+  update: async (req, res, next) => {
+    try {
+      const validation = await Validator.validate(req.body, {
+        customer_id: "required|integer|exist:Customers,id",
+        date: "required|date",
+        payment_date: "required|date",
+        payment_due_date: "required|date",
+        status: "string|min:0|max:255",
+      });
 
-			if (validation.failed) {
-				return res.status(400).json({
-					success: false,
-					message: 'Bad Request',
-					data: validation.errors,
-				});
-			}
+      if (validation.failed) {
+        return res.status(400).json({
+          success: false,
+          message: "Bad Request",
+          data: validation.errors,
+        });
+      }
 
-			const updated = await Model.update(req.body, { where: { id: req.params.id }, returning: true });
+      const updated = await Model.update(req.body, {
+        where: { id: req.params.id },
+        returning: true,
+      });
 
-			if (!updated[1][0]) {
-				return res.status(404).json({
-					success: false,
-					message: `${modelName} with id ${req.params.id} not found!`,
-					error: {},
-				});
-			}
+      if (!updated[1][0]) {
+        return res.status(404).json({
+          success: false,
+          message: `${modelName} with id ${req.params.id} not found!`,
+          error: {},
+        });
+      }
 
-			return res.status(200).json({
-				success: true,
-				message: `Success update ${modelName} with id ${req.params.id}!`,
-				data: updated[1][0],
-			});
-		} catch (error) {
-			next(error);
-		}
-	},
+      return res.status(200).json({
+        success: true,
+        message: `Success update ${modelName} with id ${req.params.id}!`,
+        data: updated[1][0],
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 
-	destroy: async (req, res, next) => {
-		try {
-			const deleted = await Model.destroy({ where: { id: req.params.id }, returning: true });
+  destroy: async (req, res, next) => {
+    try {
+      const deleted = await Model.destroy({
+        where: { id: req.params.id },
+        returning: true,
+      });
 
-			if (!deleted) {
-				return res.status(404).json({
-					status: false,
-					message: `${modelName} with id ${req.params.id} not found!`,
-					error: {},
-				});
-			}
+      if (!deleted) {
+        return res.status(404).json({
+          status: false,
+          message: `${modelName} with id ${req.params.id} not found!`,
+          error: {},
+        });
+      }
 
-			return res.status(200).json({
-				status: true,
-				message: `Success delete ${modelName} with id ${req.params.id}!`,
-				data: {},
-			});
-		} catch (error) {
-			next(error);
-		}
-	},
+      return res.status(200).json({
+        status: true,
+        message: `Success delete ${modelName} with id ${req.params.id}!`,
+        data: {},
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 };

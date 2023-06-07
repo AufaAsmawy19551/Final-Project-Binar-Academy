@@ -11,8 +11,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Route.belongsTo(models.Airport, {foreignKey: "id", as: "airport"})
-
     }
   }
   Route.init({

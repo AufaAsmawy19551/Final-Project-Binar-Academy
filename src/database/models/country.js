@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      //relasi one-to-one -> city
+      Country.hasOne(models.City, {foreignKey: "country_id", as: "city"})
+      
     }
   }
   Country.init({

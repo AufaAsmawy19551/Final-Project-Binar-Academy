@@ -1,12 +1,19 @@
 const modelName = 'Flight';
 const { Flight: Model, Airport, Airplane, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
-const airport = require('./airport');
 
 module.exports = {
 	index: async (req, res, next) => {
 		try {
-			const validation = await Validator.validate(req.query, {});
+			const validation = await Validator.validate(req.query, {
+				departure_airport_id: 'required|integer|exist:Airports,id',
+				destination_airport_id: 'required|integer|exist:Airports,id',
+				departure_date: 'required|date',
+				number_passenger: 'required|integer|min:1',
+				class_id: 'required|integer|exist:Classes,id',
+				is_round_trip: 'required|boolean',
+				return_date: 'required|date',
+			});
 
 			if (validation.failed) {
 				return res.status(400).json({

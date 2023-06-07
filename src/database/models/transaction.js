@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+     // relasi many-to-many -> Flight through: TransactionDetail
+     Transaction.belongsToMany(models.Flight, {foreignKey: 'transaction_id', as: 'payment', through: models.TransactionDetail});
     }
   }
   Transaction.init({

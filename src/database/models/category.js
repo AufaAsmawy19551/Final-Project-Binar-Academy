@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // relasi one-to-many -> Notification
+      Category.hasMany(models.Notification, {foreignKey: 'category_id', as: 'Notification'});
     }
   }
   Category.init({

@@ -1,5 +1,5 @@
-const modelName = 'Country';
-const { Country: Model, City, sequelize } = require('../database/models');
+const modelName = 'TransactionDetail';
+const { TransactionDetail: Model, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
 
 module.exports = {
@@ -30,7 +30,19 @@ module.exports = {
 	store: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'required|alpha|between:1,255',
+				transaction_id: 'required|integer|exist:Transactions,id',
+				airplane_id: 'required|integer|exist:Airplanes,id',
+				seat_id: 'required|integer|exist:Seats,id',
+				passenger_title: 'required|string|between:1,255',
+				passenger_name: 'required|string|between:1,255',
+				passenger_family_name: 'required|string|between:1,255',
+				passenger_dob: 'required|date',
+				passenger_nationality: 'required|string|between:1,255',
+				passenger_identity_card: 'required|string|between:1,255',
+				passenger_identity_card_publisher: 'required|string|between:1,255',
+				passenger_identity_card_due_date: 'required|date',
+				passenger_type: 'required|string|between:1,255',
+				boarding_status: 'required|boolean',
 			});
 
 			if (validation.failed) {
@@ -55,15 +67,7 @@ module.exports = {
 
 	show: async (req, res, next) => {
 		try {
-			const details = await Model.findOne({
-				where: { id: req.params.id },
-				include:[
-					{
-						model: City,
-						as: 'cities',
-					}
-				]
-			});
+			const details = await Model.findOne({ where: { id: req.params.id } });
 
 			if (!details) {
 				return res.status(404).json({
@@ -86,7 +90,19 @@ module.exports = {
 	update: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'alpha|between:1,255',
+				transaction_id: 'required|integer|exist:Transactions,id',
+				airplane_id: 'required|integer|exist:Airplanes,id',
+				seat_id: 'required|integer|exist:Seats,id',
+				passenger_title: 'required|string|between:1,255',
+				passenger_name: 'required|string|between:1,255',
+				passenger_family_name: 'required|string|between:1,255',
+				passenger_dob: 'required|date',
+				passenger_nationality: 'required|string|between:1,255',
+				passenger_identity_card: 'required|string|between:1,255',
+				passenger_identity_card_publisher: 'required|string|between:1,255',
+				passenger_identity_card_due_date: 'required|date',
+				passenger_type: 'required|string|between:1,255',
+				boarding_status: 'required|boolean',
 			});
 
 			if (validation.failed) {

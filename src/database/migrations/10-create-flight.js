@@ -9,10 +9,19 @@ module.exports = {
 				primaryKey: true,
 				type: Sequelize.INTEGER,
 			},
-			route_id: {
+			departure_airport_id: {
 				type: Sequelize.INTEGER,
 				references: {
-					model: 'Routes',
+					model: 'Airports',
+					key: 'id',
+				},
+				onUpdate: 'CASCADE',
+				onDelete: 'CASCADE',
+			},
+			arrival_airport_id: {
+				type: Sequelize.INTEGER,
+				references: {
+					model: 'Airports',
 					key: 'id',
 				},
 				onUpdate: 'CASCADE',

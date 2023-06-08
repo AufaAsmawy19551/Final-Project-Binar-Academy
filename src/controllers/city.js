@@ -1,5 +1,5 @@
-const modelName = 'Country';
-const { Country: Model, City, sequelize } = require('../database/models');
+const modelName = 'City';
+const { City: Model, Country, Airport, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
 
 module.exports = {
@@ -30,7 +30,8 @@ module.exports = {
 	store: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'required|alpha|between:1,255',
+				country_id: 'required|integer|exist:Countries,id',
+				name: 'required|string|between:1,255',
 			});
 
 			if (validation.failed) {
@@ -55,14 +56,19 @@ module.exports = {
 
 	show: async (req, res, next) => {
 		try {
-			const details = await Model.findOne({
+			const details = await Model.findOne({ 
 				where: { id: req.params.id },
-				include:[
+				include: [
 					{
-						model: City,
-						as: 'cities',
+						model: Airport,
+						as: 'airports'
+					},
+					{
+						model: Country,
+						as: 'country'
 					}
 				]
+			 
 			});
 
 			if (!details) {
@@ -86,7 +92,8 @@ module.exports = {
 	update: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'alpha|between:1,255',
+				country_id: 'integer|exist:Countries,i',
+				name: 'string|between:1,255',
 			});
 
 			if (validation.failed) {

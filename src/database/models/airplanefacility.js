@@ -10,11 +10,14 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // relasi many-to-one -> Facility
+      AirplaneFacility.belongsTo(models.Facility, {foreignKey: 'id', as: 'facility'});
+      // relasi many-to-one -> Airplane
+      AirplaneFacility.belongsTo(models.Airplane, {foreignKey: 'id', as: 'airplane'});
     }
   }
   AirplaneFacility.init({
-    class_id: DataTypes.INTEGER,
+    facility_id: DataTypes.INTEGER,
     airplane_id: DataTypes.INTEGER
   }, {
     sequelize,

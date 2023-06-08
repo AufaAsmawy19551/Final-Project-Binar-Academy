@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      // relasi many-to-one -> airplane
+      Seat.belongsTo(models.Airplane, {foreignKey: 'id', as: 'airplane'});
     }
   }
   Seat.init({

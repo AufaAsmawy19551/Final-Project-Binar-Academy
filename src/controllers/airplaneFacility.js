@@ -1,5 +1,5 @@
-const modelName = 'Country';
-const { Country: Model, City, sequelize } = require('../database/models');
+const modelName = 'AirplaneFacility';
+const { AirplaneFacility: Model, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
 
 module.exports = {
@@ -30,7 +30,8 @@ module.exports = {
 	store: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'required|alpha|between:1,255',
+				facility_id: 'required|integer|exist:Facilities,id',
+				airplane_id: 'required|integer|exist:Airplanes,id',
 			});
 
 			if (validation.failed) {
@@ -55,15 +56,7 @@ module.exports = {
 
 	show: async (req, res, next) => {
 		try {
-			const details = await Model.findOne({
-				where: { id: req.params.id },
-				include:[
-					{
-						model: City,
-						as: 'cities',
-					}
-				]
-			});
+			const details = await Model.findOne({ where: { id: req.params.id } });
 
 			if (!details) {
 				return res.status(404).json({
@@ -86,7 +79,8 @@ module.exports = {
 	update: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'alpha|between:1,255',
+				facility_id: 'integer|exist:Facilities,id',
+				airplane_id: 'integer|exist:Airplanes,id',
 			});
 
 			if (validation.failed) {

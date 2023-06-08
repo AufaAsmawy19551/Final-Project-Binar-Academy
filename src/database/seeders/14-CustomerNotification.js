@@ -4,7 +4,7 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert(
-			'CostumerNotifications',
+			'CustomerNotifications',
 			[
         {
           customer_id: 1,

@@ -1,11 +1,18 @@
-const modelName = 'Country';
-const { Country: Model, City, sequelize } = require('../database/models');
+const modelName = 'Flight';
+const { request } = require('express');
+const { Flight: Model, Airport, Airplane, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
 
 module.exports = {
 	index: async (req, res, next) => {
 		try {
-			const validation = await Validator.validate(req.query, {});
+			const validation = await Validator.validate(req.query, {
+				departure_airport_id: 'required|integer|exist:Airports,id',
+				destination_airport_id: 'required|integer|exist:Airports,id',
+				departure_date: 'required|date',
+				number_passenger: 'required|integer|min:1',
+				class_id: 'required|integer|exist:Classes,id',
+			});
 
 			if (validation.failed) {
 				return res.status(400).json({
@@ -15,7 +22,12 @@ module.exports = {
 				});
 			}
 
-			const list = await Model.findAll();
+			const list = await Model.findAll({
+				where: {
+					departure_airport_id: req.query.departure_airport_id,
+					arrival_airport_id: req.query.destination_airport_id,
+				},
+			});
 
 			return res.status(200).json({
 				success: true,
@@ -30,7 +42,15 @@ module.exports = {
 	store: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'required|alpha|between:1,255',
+				departure_airport_id: 'required|integer|exist:Airports,id',
+				arrival_airport_id: 'required|integer|exist:Airports,id',
+				airplane_id: 'required|integer|exist:Airplanes,id',
+				departure_date: 'required|date',
+				arrival_date: `required|date`,
+				price: 'required|integer|min:0',
+				discount: 'integer|min:0|max:100',
+				tax: 'integer|min:0|max:100',
+				stock: 'required|integer|min:0|max:72',
 			});
 
 			if (validation.failed) {
@@ -57,12 +77,20 @@ module.exports = {
 		try {
 			const details = await Model.findOne({
 				where: { id: req.params.id },
-				include:[
+				include: [
 					{
-						model: City,
-						as: 'cities',
-					}
-				]
+						model: Airplane,
+						as: 'airplane',
+					},
+					{
+						model: Airport,
+						as: 'departure_airport',
+					},
+					{
+						model: Airport,
+						as: 'destination_airport',
+					},
+				],
 			});
 
 			if (!details) {
@@ -86,7 +114,15 @@ module.exports = {
 	update: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'alpha|between:1,255',
+				departure_airport_id: 'integer|exist:Airports,id',
+				arrival_airport_id: 'integer|exist:Airports,id',
+				airplane_id: 'integer|exist:Airplanes,id',
+				departure_date: 'date',
+				arrival_date: `date`,
+				price: 'integer|min:0',
+				discount: 'min:0|max:100',
+				tax: 'min:0|max:100',
+				stock: 'integer|min:0|max:72',
 			});
 
 			if (validation.failed) {

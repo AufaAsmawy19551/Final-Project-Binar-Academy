@@ -1,5 +1,5 @@
 const modelName = 'Airport';
-const { Airport: Model, Flight, sequelize } = require('../database/models');
+const { Airport: Model, City, Country, Flight, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
 
 module.exports = {
@@ -15,7 +15,16 @@ module.exports = {
 				});
 			}
 
-			const list = await Model.findAll();
+			const list = await City.findAll({
+				include:[
+					{
+					model: Country,
+					as: 'country'
+				},{
+					model: Model,
+					as: 'airports'
+				}]
+			});
 
 			return res.status(200).json({
 				success: true,

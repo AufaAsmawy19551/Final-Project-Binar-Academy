@@ -26,7 +26,7 @@ module.exports = {
 				where: {
 					departure_airport_id: req.query.departure_airport_id,
 					arrival_airport_id: req.query.destination_airport_id,
-				}
+				},
 			});
 
 			return res.status(200).json({

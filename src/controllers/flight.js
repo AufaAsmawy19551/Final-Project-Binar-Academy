@@ -89,7 +89,7 @@ module.exports = {
 							},
 							{
 								model: Facility,
-								as: 'airplanes'
+								as: 'facilities'
 							}
 						]
 					},

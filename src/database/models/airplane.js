@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
        // relasi one-to-many -> seat
       Airplane.hasMany(models.Seat, {foreignKey: 'airplane_id', as: 'seats'});
       Airplane.belongsTo(models.Class, {foreignKey: 'class_id', as: 'class'});
-      Airplane.belongsToMany(models.Facility, {foreignKey: 'airplane_id', as: 'airplanes', through: models.AirplaneFacility});
+      Airplane.belongsToMany(models.Facility, {foreignKey: 'airplane_id', as: 'facilities', through: models.AirplaneFacility});
        //Airplane.belongsTo(models.Class, {foreignKey: 'class_id', as: 'class'});
     }
   }

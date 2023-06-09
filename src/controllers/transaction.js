@@ -1,5 +1,5 @@
 const modelName = "Transaction";
-const { Transaction: Model, sequelize } = require("../database/models");
+const { Transaction: Model, TransactionDetail, sequelize } = require("../database/models");
 const Validator = require("../utils/validatorjs");
 
 module.exports = {
@@ -56,35 +56,24 @@ module.exports = {
 
       // create transaction
       const transaction = await Model.create({
-        name: customer_identity.name,
-        email: customer_identity.email,
-        phone: customer_identity.phone
+        customer_id: 1,
+        payment_due_date: Date.now() + (1000 * 3600 * 24 * 2),
+        status: "unpaid",
       });
 
-      // create transaction details
-      const transactionDetail = await Model.create({
-        airplane_id: passenger_identity.airplane_id,
-        seat_id: passenger_identity.seat_id,
-        passenger_title: passenger_identity.passenger_title,
-        passenger_name: passenger_identity.passenger_name,
-        passenger_family_name: passenger_identity.passenger_family_name,
-        passenger_dob: passenger_identity.passenger_dob,
-        passenger_nationality: passenger_identity.passenger_nationality,
-        passenger_identity_card: passenger_identity.passenger_identity_card,
-        passenger_identity_card_publisher: passenger_identity.passenger_identity_card_publisher,
-        passenger_identity_card_due_date: passenger_identity.passenger_identity_card_due_date,
-        passenger_type: passenger_identity.passenger_type
-      });
+      // create transaction details for all passenger_identity
+      req.body.passenger_identity.forEach(async (passenger) =>{
+        // create transaction details
+        await Model.create({
+          
+        });
+      })
 
       return res.status(200).json({
         success: true,
         message: `Success create new ${modelName}!`,
-        data: [{ transaction,transactionDetail }]
+        data: {}
       });
-
-      // const created = await Model.create(req.body);
-
-      
     } catch (error) {
       next(error);
     }

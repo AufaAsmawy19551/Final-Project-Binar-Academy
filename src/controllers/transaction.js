@@ -55,16 +55,36 @@ module.exports = {
       }
 
       // create transaction
-      
-      // create transaction details
+      const transaction = await Model.create({
+        name: customer_identity.name,
+        email: customer_identity.email,
+        phone: customer_identity.phone
+      });
 
-      // const created = await Model.create(req.body);
+      // create transaction details
+      const transactionDetail = await Model.create({
+        airplane_id: passenger_identity.airplane_id,
+        seat_id: passenger_identity.seat_id,
+        passenger_title: passenger_identity.passenger_title,
+        passenger_name: passenger_identity.passenger_name,
+        passenger_family_name: passenger_identity.passenger_family_name,
+        passenger_dob: passenger_identity.passenger_dob,
+        passenger_nationality: passenger_identity.passenger_nationality,
+        passenger_identity_card: passenger_identity.passenger_identity_card,
+        passenger_identity_card_publisher: passenger_identity.passenger_identity_card_publisher,
+        passenger_identity_card_due_date: passenger_identity.passenger_identity_card_due_date,
+        passenger_type: passenger_identity.passenger_type
+      });
 
       return res.status(200).json({
         success: true,
         message: `Success create new ${modelName}!`,
-        data: {},
+        data: [{ transaction,transactionDetail }]
       });
+
+      // const created = await Model.create(req.body);
+
+      
     } catch (error) {
       next(error);
     }

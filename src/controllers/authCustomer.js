@@ -22,17 +22,14 @@ module.exports = {
 			}
 			const hashPassword = await bycrypt(password,10)
 			// buat service dan response di sini!
-			const customer = await Customer.create({
-				name, email, password: hashPassword
-			})
 
 			return res.status(201).json({
 				status: true,
 				message: "User Created!",
 				data: {
-					id: customer.id,
-					name: customer.name,
-					email: customer.email
+					id: validation.id,
+					name: validation.name,
+					email: validation.email
 				}
 			})
 		} catch (error) {
@@ -76,21 +73,30 @@ module.exports = {
 					data: validation.errors,
 				});
 			}
-			const hashPassword = await bycrypt(password,10)
-			// buat service dan response di sini!
-			const customer = await Customer.create({
-				name, email, password: hashPassword
-			})
-			// buat service dan response di sini!
-			return res.status(201).json({
-				status: true,
-				message: "User Created!",
-				data: {
-					id: customer.id,
-					name: customer.name,
-					email: customer.email
-				}
-			})
+			// const passwordCorrect = await bcrypt.compare(password, validation.password);
+            // if (!passwordCorrect) {
+            //     return res.status(400).json({
+            //         status: false,
+            //         message: 'credential is not valid!',
+            //         data: null
+            //     });
+            // }
+
+            // const payload = {
+            //     id: validation.id,
+            //     name: validation.name,
+            //     email: validation.email
+            // };
+
+            // const token = await jwt.sign(payload, JWT_SECRET_KEY);
+            // return res.status(200).json({
+            //     status: true,
+            //     message: 'login success!',
+            //     data: {
+            //         token: token
+            //     }
+            // });
+
 		} catch (error) {
 			next(error);
 		}

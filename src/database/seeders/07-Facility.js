@@ -7,25 +7,20 @@ module.exports = {
 			'Facilities',
 			[
 				{
-          name: 'bagasi lebih besar',
+          name: 'Baggage 20 kg',
           createdAt: new Date(),
 					updatedAt: new Date(),
         },
         {
-          name: 'kursi lebih lebar dan nyaman',
+          name: 'Cabbin baggage 7kg',
           createdAt: new Date(),
 					updatedAt: new Date(),
         },
         {
-          name: 'hiburan di dalam pesawat',
+          name: 'In Flight Entertainment',
           createdAt: new Date(),
 					updatedAt: new Date(),
         },
-        {
-          name: 'makanan mewah',
-          createdAt: new Date(),
-					updatedAt: new Date(),
-        }
 			],
 			{}
 		);

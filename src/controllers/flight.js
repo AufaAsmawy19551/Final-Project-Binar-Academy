@@ -1,6 +1,6 @@
 const modelName = 'Flight';
 const { request } = require('express');
-const { Flight: Model, Airport, Airplane, sequelize } = require('../database/models');
+const { Flight: Model, Airport, Airplane, Facility, Class, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
 
 module.exports = {
@@ -22,11 +22,12 @@ module.exports = {
 				});
 			}
 
-			const list = await Model.findAll({
-				where: {
-					departure_airport_id: req.query.departure_airport_id,
-					arrival_airport_id: req.query.destination_airport_id,
-				},
+			const list = await Model.findAll({	
+				departure_airport_id: req.query.departure_airport_id,
+				destination_airport_id: req.query.destination_airport_id,
+				departure_date: '',
+				number_passenger: req.query.number_passenger,
+				class_id: req.query.class_id,
 			});
 
 			return res.status(200).json({
@@ -84,12 +85,21 @@ module.exports = {
 					},
 					{
 						model: Airport,
-						as: 'departure_airport',
+						as: 'departure_airports',
 					},
 					{
 						model: Airport,
-						as: 'destination_airport',
+						as: 'arrival_airports',
 					},
+					{
+						model : Class,
+						as : 'classes'
+					},
+					{
+						model: Facility,
+						as: 'facilities'
+					},
+					
 				],
 			});
 

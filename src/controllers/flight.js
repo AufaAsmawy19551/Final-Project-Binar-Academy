@@ -1,6 +1,6 @@
 const modelName = 'Flight';
 const { request } = require('express');
-const { Flight: Model, Airport, Airplane, Facility, Class, sequelize } = require('../database/models');
+const { Flight: Model, Airport, Airplane,Facility, Class, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
 
 module.exports = {
@@ -82,23 +82,33 @@ module.exports = {
 					{
 						model: Airplane,
 						as: 'airplane',
+						include:[
+							{
+								model: Class,
+								as: 'class'
+							},
+							{
+								model: Facility,
+								as: 'airplanes'
+							}
+						]
 					},
 					{
 						model: Airport,
-						as: 'departure_airports',
+						as: 'departure_airport',
 					},
 					{
 						model: Airport,
-						as: 'arrival_airports',
+						as: 'destination_airport',
 					},
-					{
-						model : Class,
-						as : 'classes'
-					},
-					{
-						model: Facility,
-						as: 'facilities'
-					},
+					// {
+					// 	model : Class,
+					// 	as : 'classes'
+					// },
+					// {
+					// 	model: Facility,
+					// 	as: 'facilities'
+					// },
 					
 				],
 			});

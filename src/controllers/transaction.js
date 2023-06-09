@@ -30,51 +30,21 @@ module.exports = {
   store: async (req, res, next) => {
     try {
       const validation = await Validator.validate(req.body, {
-          name : 'required|string|between:1,255',
-          email: 'required|email|',
-	        phone: 'required|integer|min:9|max:72'
-        }, 
-       [
-          { 
-              airplane_id: "integer|exist:Customers,id",
-              seat_id: "integer|exist:Customers,id", 
-              passenger_title: "string|between:1,255",
-              passenger_name: "string|between:1,255",
-              passenger_family_name: "string|between:1,255",
-              passenger_dob: "string|between:1,255",
-              passenger_nationality: "string|between:1,255",
-              passenger_identity_card: "integer|between:1,10",
-              passenger_identity_card_publisher: "integer|between:1,10",
-              passenger_identity_card_due_date: "date",
-              passenger_type: "string|between:1,10"
-          },
-          { 
-              airplane_id: "integer|exist:Customers,id",
-              seat_id: "integer|exist:Customers,id", 
-              passenger_title: "string|between:1,255",
-              passenger_name: "string|between:1,255",
-              passenger_family_name: "string|between:1,255",
-              passenger_dob: "string|between:1,255",
-              passenger_nationality: "string|between:1,255",
-              passenger_identity_card: "integer|between:1,10",
-              passenger_identity_card_publisher: "integer|between:1,10",
-              passenger_identity_card_due_date: "date",
-              passenger_type: "string|between:1,10"
-        },
-        { 
-              airplane_id: "integer|exist:Customers,id",
-              seat_id: "integer|exist:Customers,id", 
-              passenger_title: "string|between:1,255",
-              passenger_name: "string|between:1,255",
-              passenger_family_name: "string|between:1,255",
-              passenger_dob: "string|between:1,255",
-              passenger_nationality: "string|between:1,255",
-              passenger_identity_card: "integer|between:1,10",
-              passenger_identity_card_publisher: "integer|between:1,10",
-              passenger_identity_card_due_date: "date",
-              passenger_type: "string|between:1,10"
-          },
-      ]);
+          'customer_identity.name' : 'required|string|between:1,255',
+          'customer_identity.email': 'required|email',
+	        'customer_identity.phone': 'required|integer|digits_between:9,12',
+          'passenger_identity.*.airplane_id': "required|integer|exist:Airplanes,id",
+          'passenger_identity.*.seat_id': "required|integer|exist:Seats,id", 
+          'passenger_identity.*.passenger_title': "required|string|between:1,255",
+          'passenger_identity.*.passenger_name': "required|string|between:1,255",
+          'passenger_identity.*.passenger_family_name': "string|between:1,255",
+          'passenger_identity.*.passenger_dob': "required|date",
+          'passenger_identity.*.passenger_nationality': "required|string|between:1,255",
+          'passenger_identity.*.passenger_identity_card': "required|string|size:16",
+          'passenger_identity.*.passenger_identity_card_publisher': "string",
+          'passenger_identity.*.passenger_identity_card_due_date': "date",
+          'passenger_identity.*.passenger_type': "string|between:1,10"
+      });
 
       if (validation.failed) {
         return res.status(400).json({
@@ -84,12 +54,16 @@ module.exports = {
         });
       }
 
-      const created = await Model.create(req.body);
+      // create transaction
+      
+      // create transaction details
+
+      // const created = await Model.create(req.body);
 
       return res.status(200).json({
         success: true,
         message: `Success create new ${modelName}!`,
-        data: created,
+        data: {},
       });
     } catch (error) {
       next(error);

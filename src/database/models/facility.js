@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // relasi one-to-many -> AirplaneFacility
-      Facility.hasMany(models.AirplaneFacility, {foreignKey: 'facility_id', as: 'AirplaneFacility'});
+      Facility.hasMany(models.AirplaneFacility, {foreignKey: 'facility_id', as: 'airplane_facility'});
     }
   }
   Facility.init({

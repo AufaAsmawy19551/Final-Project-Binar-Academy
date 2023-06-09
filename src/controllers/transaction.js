@@ -30,12 +30,51 @@ module.exports = {
   store: async (req, res, next) => {
     try {
       const validation = await Validator.validate(req.body, {
-        customer_id: "required|integer|exist:Customers,id",
-        date: "required|date",
-        payment_date: "required|date",
-        payment_due_date: "required|date",
-        status: "string|min:0|max:255",
-      });
+          name : 'required|string|between:1,255',
+          email: 'required|email|',
+	        phone: 'required|integer|min:9|max:72'
+        }, 
+       [
+          { 
+              airplane_id: "integer|exist:Customers,id",
+              seat_id: "integer|exist:Customers,id", 
+              passenger_title: "string|between:1,255",
+              passenger_name: "string|between:1,255",
+              passenger_family_name: "string|between:1,255",
+              passenger_dob: "string|between:1,255",
+              passenger_nationality: "string|between:1,255",
+              passenger_identity_card: "integer|between:1,10",
+              passenger_identity_card_publisher: "integer|between:1,10",
+              passenger_identity_card_due_date: "date",
+              passenger_type: "string|between:1,10"
+          },
+          { 
+              airplane_id: "integer|exist:Customers,id",
+              seat_id: "integer|exist:Customers,id", 
+              passenger_title: "string|between:1,255",
+              passenger_name: "string|between:1,255",
+              passenger_family_name: "string|between:1,255",
+              passenger_dob: "string|between:1,255",
+              passenger_nationality: "string|between:1,255",
+              passenger_identity_card: "integer|between:1,10",
+              passenger_identity_card_publisher: "integer|between:1,10",
+              passenger_identity_card_due_date: "date",
+              passenger_type: "string|between:1,10"
+        },
+        { 
+              airplane_id: "integer|exist:Customers,id",
+              seat_id: "integer|exist:Customers,id", 
+              passenger_title: "string|between:1,255",
+              passenger_name: "string|between:1,255",
+              passenger_family_name: "string|between:1,255",
+              passenger_dob: "string|between:1,255",
+              passenger_nationality: "string|between:1,255",
+              passenger_identity_card: "integer|between:1,10",
+              passenger_identity_card_publisher: "integer|between:1,10",
+              passenger_identity_card_due_date: "date",
+              passenger_type: "string|between:1,10"
+          },
+      ]);
 
       if (validation.failed) {
         return res.status(400).json({
@@ -59,7 +98,7 @@ module.exports = {
 
   show: async (req, res, next) => {
     try {
-      const details = await Model.findOne({ where: { id: req.params.id } });
+      const details = await Model.findOne({ where: {id: req.params.id}});
 
       if (!details) {
         return res.status(404).json({

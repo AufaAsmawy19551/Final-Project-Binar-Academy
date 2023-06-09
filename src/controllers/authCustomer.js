@@ -8,8 +8,7 @@ const Validator = require('../utils/validatorjs');
 module.exports = {
 	register: async (req, res, next) => {
 		try {
-			const {name, email, password} = req.body;
-
+			const {name, email, password} = req.body
 			const validation = await Validator.validate(req.body, {
 				name: 'required|string',
 				email: 'required|email|unique:Customers,email',
@@ -23,7 +22,7 @@ module.exports = {
 					data: validation.errors,
 				});
 			}
-			const hashPassword = await bycrypt(password,10)
+			const hashPassword = await bycrypt.hash(password,10)
 			// buat service dan response di sini!
 
 			const customer = await Customer.create(req.body,{
@@ -68,8 +67,9 @@ module.exports = {
 
 	login: async (req, res, next) => {
 		try {
-			const validation = await Validator.validate(req.query, {
-				email: 'required|unique|string|exist:Customers,id',
+			const {email, password} = req.body
+			const validation = await Validator.validate(req.body, {
+				email: 'required|email',
 				password: 'required|string|between:8,255'
 			});
 
@@ -80,29 +80,29 @@ module.exports = {
 					data: validation.errors,
 				});
 			}
-			// const passwordCorrect = await bcrypt.compare(password, validation.password);
-            // if (!passwordCorrect) {
-            //     return res.status(400).json({
-            //         status: false,
-            //         message: 'credential is not valid!',
-            //         data: null
-            //     });
-            // }
+			const passwordCorrect = await bcrypt.compare(password, validation.password); // error bcrypt is not defined
+            if (!passwordCorrect) {
+                return res.status(400).json({
+                    status: false,
+                    message: 'credential is not valid!',
+                    data: null
+                });
+            }
 
-            // const payload = {
-            //     id: validation.id,
-            //     name: validation.name,
-            //     email: validation.email
-            // };
+            const payload = {
+                id: validation.id,
+                name: validation.name,
+                email: validation.email
+            };
 
-            // const token = await jwt.sign(payload, JWT_SECRET_KEY);
-            // return res.status(200).json({
-            //     status: true,
-            //     message: 'login success!',
-            //     data: {
-            //         token: token
-            //     }
-            // });
+            const token = await jwt.sign(payload, JWT_SECRET_KEY);
+            return res.status(200).json({
+                status: true,
+                message: 'login success!',
+                data: {
+                    token: token
+                }
+            });
 
 		} catch (error) {
 			next(error);

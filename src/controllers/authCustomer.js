@@ -1,16 +1,20 @@
 const modelName = 'Customer';
 const bycrypt = require("bcrypt")
-const { Customer: Model,Customer, sequelize } = require('../database/models');
+const jwt = require('jsonwebtoken');
+const {JWT_SECRET_KEY} = process.env;
+const { Customer: Model, Customer, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
 
 module.exports = {
 	register: async (req, res, next) => {
 		try {
+			const {name, email, password} = req.body;
+
 			const validation = await Validator.validate(req.query, {
 				name: 'required|string|exist:Cutomers,id',
 				email: 'required|unique|string|exist:Customers,id',
-				password: 'required|string|min:8|max:255|confirmed',
-				password_confirmation: 'required|string|min:8|max:255|confirmed',
+				password: 'required|string|between:8,255|confirmed',
+				// "password_confirmation": 'required|string|min:8|max:255|confirmed',
 			});
 
 			if (validation.failed) {
@@ -23,15 +27,19 @@ module.exports = {
 			const hashPassword = await bycrypt(password,10)
 			// buat service dan response di sini!
 
-			return res.status(201).json({
-				status: true,
-				message: "User Created!",
+			const customer = await Customer.create(req.body,{
+				name, email, password: hashPassword
+			});
+
+			return res.status(200).json({
+				success: true,
+				message: `Success create new ${modelName}!`,
 				data: {
-					id: validation.id,
-					name: validation.name,
-					email: validation.email
-				}
-			})
+					name: customer.name,
+					email: customer.email,
+				},
+			  });
+
 		} catch (error) {
 			next(error);
 		}
@@ -63,7 +71,7 @@ module.exports = {
 		try {
 			const validation = await Validator.validate(req.query, {
 				email: 'required|unique|string|exist:Customers,id',
-				password: 'required|string|min:8|max:255'
+				password: 'required|string|between:8,255'
 			});
 
 			if (validation.failed) {

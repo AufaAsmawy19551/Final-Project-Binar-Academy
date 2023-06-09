@@ -1,15 +1,19 @@
 const modelName = 'Customer';
 const bycrypt = require("bcrypt")
+const jwt = require('jsonwebtoken');
+const {JWT_SECRET_KEY} = process.env;
 const { Customer: Model, Customer, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
 
 module.exports = {
 	register: async (req, res, next) => {
 		try {
+			const {name, email, password} = req.body;
+
 			const validation = await Validator.validate(req.query, {
 				name: 'required|string|exist:Cutomers,id',
 				email: 'required|unique|string|exist:Customers,id',
-				password: 'required|string|between8,255|confirmed',
+				password: 'required|string|between:8,255|confirmed',
 				// "password_confirmation": 'required|string|min:8|max:255|confirmed',
 			});
 
@@ -67,7 +71,7 @@ module.exports = {
 		try {
 			const validation = await Validator.validate(req.query, {
 				email: 'required|unique|string|exist:Customers,id',
-				password: 'required|string|min:8|max:255'
+				password: 'required|string|between:8,255'
 			});
 
 			if (validation.failed) {

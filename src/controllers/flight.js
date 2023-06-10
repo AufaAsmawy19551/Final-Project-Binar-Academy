@@ -142,8 +142,6 @@ module.exports = {
         },
       )
 
-        // console.log(details[0].price)
-
       details[0].facilities = await sequelize.query(
         `
       SELECT

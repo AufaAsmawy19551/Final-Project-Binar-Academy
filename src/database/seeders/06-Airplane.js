@@ -3,13 +3,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
+		const logo = "https://1.bp.blogspot.com/-7GZE8e5zNuY/YWu4HNMnquI/AAAAAAAADek/CpIzS-i9gik4lB3ESPm5OxBVWNKmC0RawCNcBGAsYHQ/s2048/Garuda%2BIndonesia.png"
     await queryInterface.bulkInsert(
 			'Airplanes',
 			[
 				{
           class_id: 1,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-203',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -17,7 +18,7 @@ module.exports = {
         {
           class_id: 2,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-203',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -25,7 +26,7 @@ module.exports = {
         {
           class_id: 3,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-203',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -33,7 +34,7 @@ module.exports = {
         {
           class_id: 1,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-204',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -41,7 +42,7 @@ module.exports = {
         {
           class_id: 2,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-204',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -49,7 +50,7 @@ module.exports = {
         {
           class_id: 3,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-204',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -57,7 +58,7 @@ module.exports = {
         {
           class_id: 1,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-205',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -65,7 +66,7 @@ module.exports = {
         {
           class_id: 2,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-205',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -73,7 +74,7 @@ module.exports = {
         {
           class_id: 3,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-205',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -81,7 +82,7 @@ module.exports = {
         {
           class_id: 1,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-206',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -89,7 +90,7 @@ module.exports = {
         {
           class_id: 2,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-206',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -97,7 +98,7 @@ module.exports = {
         {
           class_id: 3,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-206',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -105,7 +106,7 @@ module.exports = {
         {
           class_id: 1,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-207',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -113,7 +114,7 @@ module.exports = {
         {
           class_id: 2,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-207',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -121,7 +122,7 @@ module.exports = {
         {
           class_id: 3,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-207',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -129,7 +130,7 @@ module.exports = {
         {
           class_id: 1,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-208',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -137,7 +138,7 @@ module.exports = {
         {
           class_id: 2,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-208',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -145,7 +146,7 @@ module.exports = {
         {
           class_id: 3,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-208',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -153,7 +154,7 @@ module.exports = {
         {
           class_id: 1,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-209',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -161,7 +162,7 @@ module.exports = {
         {
           class_id: 2,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-209',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -169,7 +170,7 @@ module.exports = {
         {
           class_id: 3,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-209',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -177,7 +178,7 @@ module.exports = {
         {
           class_id: 1,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-210',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -185,7 +186,7 @@ module.exports = {
         {
           class_id: 2,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-210',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -193,7 +194,7 @@ module.exports = {
         {
           class_id: 3,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-210',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -201,7 +202,7 @@ module.exports = {
         {
           class_id: 1,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-211',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -209,7 +210,7 @@ module.exports = {
         {
           class_id: 2,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-211',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -217,7 +218,7 @@ module.exports = {
         {
           class_id: 3,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-211',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -225,7 +226,7 @@ module.exports = {
         {
           class_id: 1,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-212',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -233,7 +234,7 @@ module.exports = {
         {
           class_id: 2,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-212',
 					createdAt: new Date(),
 					updatedAt: new Date(),
@@ -241,7 +242,7 @@ module.exports = {
         {
           class_id: 3,
 					name: 'Jet Air',
-					logo: 'ASD$%94AASDA%$%ASDFA()*JS',
+					logo: logo,
 					code: 'JT-212',
 					createdAt: new Date(),
 					updatedAt: new Date(),

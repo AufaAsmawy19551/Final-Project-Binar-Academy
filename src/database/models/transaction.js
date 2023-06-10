@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
 
      // relasi many-to-many -> Flight through: TransactionDetail
-      Transaction.belongsToMany(models.Flight, {foreignKey: 'transaction_id', as: 'payment', through: models.TransactionDetail});
+      Transaction.hasMany(models.TransactionDetail, {foreignKey: 'transaction_id', as: 'transaction_details'});
     }
   }
   Transaction.init({

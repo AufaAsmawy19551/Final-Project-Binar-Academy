@@ -9,7 +9,7 @@ module.exports = {
       [
         {
           transaction_id: 1,
-          airplane_id: 1,
+          flight_id: 1,
           seat_id: 1,
           passenger_title: 'Mr.',
           passenger_name: 'Harry',
@@ -26,7 +26,7 @@ module.exports = {
 				},
         {
           transaction_id: 2,
-          airplane_id: 1,
+          flight_id: 1,
           seat_id: 2,
           passenger_title: 'Mrs.',
           passenger_name: 'Hermione',
@@ -43,7 +43,7 @@ module.exports = {
 				},
         {
           transaction_id: 3,
-          airplane_id: 1,
+          flight_id: 1,
           seat_id: 3,
           passenger_title: 'Mr.',
           passenger_name: 'Sam',
@@ -60,7 +60,7 @@ module.exports = {
 				},
         {
           transaction_id: 4,
-          airplane_id: 2,
+          flight_id: 2,
           seat_id: 1,
           passenger_title: 'Mr.',
           passenger_name: 'Budi',
@@ -77,7 +77,7 @@ module.exports = {
 				},
         {
           transaction_id: 5,
-          airplane_id: 2,
+          flight_id: 2,
           seat_id: 2,
           passenger_title: 'Mrs.',
           passenger_name: 'Agatha',
@@ -94,7 +94,7 @@ module.exports = {
 				},
         {
           transaction_id: 6,
-          airplane_id: 2,
+          flight_id: 2,
           seat_id: 3,
           passenger_title: 'Mr.',
           passenger_name: 'John',
@@ -111,7 +111,7 @@ module.exports = {
 				},
         {
           transaction_id: 7,
-          airplane_id: 3,
+          flight_id: 3,
           seat_id: 1,
           passenger_title: 'Mr.',
           passenger_name: 'Joko',
@@ -128,7 +128,7 @@ module.exports = {
 				},
         {
           transaction_id: 8,
-          airplane_id: 3,
+          flight_id: 3,
           seat_id: 2,
           passenger_title: 'Mr.',
           passenger_name: 'Anwar',
@@ -145,7 +145,7 @@ module.exports = {
 				},
         {
           transaction_id: 9,
-          airplane_id: 3,
+          flight_id: 3,
           seat_id: 3,
           passenger_title: 'Mr.',
           passenger_name: 'Michael',

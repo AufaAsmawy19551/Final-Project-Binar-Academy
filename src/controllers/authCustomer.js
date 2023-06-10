@@ -1,5 +1,5 @@
 const modelName = 'Customer';
-const bycrypt = require("bcrypt")
+const bcrypt = require("bcrypt")
 const jwt = require('jsonwebtoken');
 const {JWT_SECRET_KEY} = process.env;
 const { Customer: Model, Customer, sequelize } = require('../database/models');
@@ -22,7 +22,7 @@ module.exports = {
 					data: validation.errors,
 				});
 			}
-			const hashPassword = await bycrypt.hash(password,10)
+			const hashPassword = await bcrypt.hash(password,10)
 			// buat service dan response di sini!
 
 			const customer = await Customer.create(req.body,{
@@ -85,19 +85,18 @@ module.exports = {
 			const customer = await Customer.findOne({
 				where: {email}
 			});
-			
             if (!customer) {
                 return res.status(400).json({
-                    status: false,
-                    message: 'credential is not valid!',
+                    success: false,
+                    message: 'Email not Found!',
                     data: null
                 });
             }
 
-			const passwordCorrect = await bcrypt.compare(password, validation.password);
+			const passwordCorrect = await bcrypt.compare(password, customer.password);
             if (!passwordCorrect) {
                 return res.status(400).json({
-                    status: false,
+                    success: false,
                     message: 'credential is not valid!',
                     data: null
                 });
@@ -111,7 +110,7 @@ module.exports = {
 
             const token = await jwt.sign(payload, JWT_SECRET_KEY);
             return res.status(200).json({
-                status: true,
+                success: true,
                 message: 'login success!',
                 data: {
                     token: token

@@ -34,6 +34,8 @@ module.exports = {
         password: hashPassword, 
       })
 
+      // code untuk mengirim kode otp ke email
+
       return res.status(200).json({
         success: true,
         message: `Success create new ${modelName}!`,
@@ -54,8 +56,6 @@ module.exports = {
         otp_code: 'required|string',
       })
 
-
-	  
       if (validation.failed) {
         return res.status(400).json({
           success: false,

@@ -110,6 +110,7 @@ module.exports = {
       const payload = {
         id: customer.id,
         name: customer.name,
+        type: "customer",
         email_verified: customer.email_verified,
       }
 

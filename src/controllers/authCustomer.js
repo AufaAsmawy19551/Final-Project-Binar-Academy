@@ -68,6 +68,7 @@ module.exports = {
 	login: async (req, res, next) => {
 		try {
 			const {email, password} = req.body
+
 			const validation = await Validator.validate(req.body, {
 				email: 'required|email',
 				password: 'required|string|between:8,255'
@@ -80,7 +81,20 @@ module.exports = {
 					data: validation.errors,
 				});
 			}
-			const passwordCorrect = await bcrypt.compare(password, validation.password); // error bcrypt is not defined
+
+			const customer = await Customer.findOne({
+				where: {email}
+			});
+			
+            if (!customer) {
+                return res.status(400).json({
+                    status: false,
+                    message: 'credential is not valid!',
+                    data: null
+                });
+            }
+
+			const passwordCorrect = await bcrypt.compare(password, validation.password);
             if (!passwordCorrect) {
                 return res.status(400).json({
                     status: false,
@@ -90,9 +104,9 @@ module.exports = {
             }
 
             const payload = {
-                id: validation.id,
-                name: validation.name,
-                email: validation.email
+                id: customer.id,
+                name: customer.name,
+                email: customer.email
             };
 
             const token = await jwt.sign(payload, JWT_SECRET_KEY);

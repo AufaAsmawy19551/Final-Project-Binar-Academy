@@ -104,7 +104,7 @@ module.exports = {
       const payload = {
         id: customer.id,
         name: customer.name,
-        email: customer.email,
+        email_verified: customer.email_verified,
       }
 
       const token = await jwt.sign(payload, JWT_SECRET_KEY)

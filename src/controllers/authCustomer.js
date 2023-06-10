@@ -29,7 +29,9 @@ module.exports = {
       const customer = await Customer.create(req.body, {
         name,
         email,
-        password: hashPassword,
+        password: hashPassword, 
+		phone, 
+		password_confirmation
       })
 
       return res.status(200).json({

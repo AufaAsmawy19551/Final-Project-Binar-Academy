@@ -1,6 +1,7 @@
 const modelName = "Transaction";
 const { Transaction: Model, TransactionDetail, sequelize } = require("../database/models");
 const Validator = require("../utils/validatorjs");
+const transactionDetail = require("./transactionDetail");
 
 module.exports = {
   index: async (req, res, next) => {
@@ -64,8 +65,20 @@ module.exports = {
       // create transaction details for all passenger_identity
       req.body.passenger_identity.forEach(async (passenger) =>{
         // create transaction details
-        await Model.create({
-          
+        await TransactionDetail.create({
+          transaction_id: transaction.id,
+          airplane_id:  passenger.airplane_id,
+          seat_id: passenger.seat_id,
+          passenger_title: passenger.passenger_title,
+          passenger_name: passenger.passenger_name,
+          passenger_family_name: passenger.passenger_family_name,
+          // passenger_dob: passenger.passenger_dob,
+          passenger_nationality: passenger.passenger_nationality,
+          passenger_identity_card: passenger.passenger_identity_card,
+          passenger_identity_card_publisher: passenger.passenger_identity_card_publisher,
+          // passenger_identity_card_due_date: passenger.passenger_identity_card_publisher,
+          passenger_type: passenger.passenger_type,
+          boarding_status: false,
         });
       })
 
@@ -81,7 +94,7 @@ module.exports = {
 
   show: async (req, res, next) => {
     try {
-      const details = await Model.findOne({ where: {id: req.params.id}});
+      const details = await Model.findOne({ where: {id: req.params.id,}, include: TransactionDetail});
 
       if (!details) {
         return res.status(404).json({

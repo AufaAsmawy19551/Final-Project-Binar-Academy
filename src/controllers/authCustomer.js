@@ -3,6 +3,7 @@ const { Customer, sequelize } = require('../database/models')
 const Validator = require('../utils/validatorjs')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+
 const { JWT_SECRET_KEY } = process.env
 
 module.exports = {
@@ -50,6 +51,8 @@ module.exports = {
         otp_code: 'required|string',
       })
 
+
+	  
       if (validation.failed) {
         return res.status(400).json({
           success: false,

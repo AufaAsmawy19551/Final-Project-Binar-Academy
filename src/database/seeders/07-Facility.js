@@ -21,6 +21,11 @@ module.exports = {
           createdAt: new Date(),
 					updatedAt: new Date(),
         },
+        {
+          name: 'Free Launch',
+          createdAt: new Date(),
+					updatedAt: new Date(),
+        },
 			],
 			{}
 		);

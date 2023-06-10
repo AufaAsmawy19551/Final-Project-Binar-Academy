@@ -9,10 +9,11 @@ const { JWT_SECRET_KEY } = process.env
 module.exports = {
   register: async (req, res, next) => {
     try {
-      const { name, email, password } = req.body
+      const { name, email, phone, password } = req.body
       const validation = await Validator.validate(req.body, {
         name: 'required|string',
         email: 'required|email|unique:Customers,email',
+        phone: 'required|integer|digits_between:9,12|unique:Customers,phone',
         password: 'required|string|between:8,255|confirmed',
       })
 
@@ -23,15 +24,14 @@ module.exports = {
           data: validation.errors,
         })
       }
-      const hashPassword = await bcrypt.hash(password, 10)
       // buat service dan response di sini!
 
-      const customer = await Customer.create(req.body, {
-        name,
-        email,
+      const hashPassword = await bcrypt.hash(password, 10)
+      const customer = await Customer.create({
+        name: name,
+        email: email,
+		    phone: phone, 
         password: hashPassword, 
-		phone, 
-		password_confirmation
       })
 
       return res.status(200).json({
@@ -40,6 +40,7 @@ module.exports = {
         data: {
           name: customer.name,
           email: customer.email,
+          phone: customer.phone,
         },
       })
     } catch (error) {

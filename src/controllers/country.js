@@ -15,7 +15,22 @@ module.exports = {
 				});
 			}
 
-			const list = await Model.findAll();
+			// const list = await Model.findAll();
+			const list = await sequelize.query(`
+			SELECT 
+				cn.id "country_id", 
+				cn.name "country_name", 
+				ci.id "city_id", 
+				ci.name "city_name" 
+			FROM "Countries" cn 
+				LEFT JOIN "Cities" ci ON(cn.id = ci.country_id)
+			`, {
+				type: sequelize.QueryTypes.SELECT,
+				raw: true,
+				nest: true,
+			});
+
+			console.table(list);
 
 			return res.status(200).json({
 				success: true,

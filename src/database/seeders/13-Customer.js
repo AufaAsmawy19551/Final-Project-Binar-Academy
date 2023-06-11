@@ -47,6 +47,16 @@ module.exports = {
 					createdAt: new Date(),
 					updatedAt: new Date(),
 				},
+				{
+					name: 'Beni',
+					email: 'beni@gmail.com',
+					email_verified: true,
+					phone: '12345678910',
+					password: await bcrypt.hash('password', 10),
+					otp_code: '123456',
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				},
 			],
 			{}
 		);

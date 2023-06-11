@@ -10,7 +10,7 @@ module.exports = {
 				{
 					departure_airport_id: 1,
 					arrival_airport_id: 2,
-					airplane_id: 2,
+					airplane_id: 1,
 					departure_date: new Date(now.getTime() + 1000 * 3600 * 24),
 					arrival_date: new Date(now.getTime() + 1000 * 3600 * 24 * 2),
 					price: 1500000,

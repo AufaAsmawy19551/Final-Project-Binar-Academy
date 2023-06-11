@@ -16,9 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       Flight.belongsTo(models.Airport, {foreignKey: 'departure_airport_id', as: 'departure_airport'});
       Flight.belongsTo(models.Airport, {foreignKey: 'arrival_airport_id', as: 'destination_airport'});
       Flight.belongsTo(models.Airplane, {foreignKey: 'airplane_id', as: 'airplane'});
-
-      // relasi many-to-many -> Transaction through: TransactionDetail
-      Flight.belongsToMany(models.Transaction, {foreignKey: 'id', as: 'transaction', through: models.TransactionDetail});
+      Flight.hasMany(models.TransactionDetail, {foreignKey: 'flight_id', as: 'transaction_details'});
     }
   }
   Flight.init({

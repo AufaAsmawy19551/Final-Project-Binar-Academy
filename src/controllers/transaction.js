@@ -107,49 +107,79 @@ module.exports = {
 
   show: async (req, res, next) => {
     try {
-      const details = await Model.findOne({
-        where: { id: req.params.id },
-        include: [
-          {
-            model: TransactionDetail,
-            as: 'transaction_details',
-            include: [
-              {
-                model: Seat,
-                as: 'seat'
-              },
-              {
-                model: Flight,
-                as: 'flight',
-                include: [
-                  {
-                    model: Airplane,
-                    as: 'airplane',
-                    include: [
-                      {
-                        model: Class,
-                        as: 'class',
-                      },
-                      {
-                        model: Facility,
-                        as: 'facilities',
-                      },
-                    ],
-                  },
-                  {
-                    model: Airport,
-                    as: 'departure_airport',
-                  },
-                  {
-                    model: Airport,
-                    as: 'destination_airport',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      })
+        
+
+      const details = await sequelize.query(
+        `
+        SELECT 
+          
+          t.id "transaction_id",
+          cs.id "customer_id",
+          cs.name "customer_name",
+          t.date "date",
+          t.payment_date "payment_date",
+          t.payment_due_date "payment_due_date",
+          t.status "payment_status",
+          a.id "airplane_id",
+          a.name "airplane_name",
+          a.code "airplane_logo",
+          a.logo "airplane_code",
+          s.id "seat_id",
+          s.number "seat_number",
+          c.id "class_id",
+          c.name "class",
+          f.id "flight_id",
+          dpA.id "departure_airport_id",
+          dpA.name "departure_airport",
+          dpC.name "departure_city",
+				  arA.id "arrival_airport_id",
+          arA.name "arrival_airport",
+				  arC.name "arrival_city",
+          tD.id "transaction_detail_id",
+          tD.passenger_title "passenger_title",
+          tD.passenger_name "passenger_name",
+          tD.passenger_family_name "passenger_family_name",
+          tD.passenger_dob "passenger_dob",
+          tD.passenger_nationality "passenger_nationality",
+          tD.passenger_identity_card "passenger_identity_cardy",
+          tD.passenger_identity_card_publisher "passenger_identity_card_publisher",
+          tD.passenger_identity_card_due_date "passenger_identity_card_due_date",
+          tD.passenger_type "passenger_type",
+          tD.passenger_type "passenger_type",
+          tD.boarding_status "boarding_status"
+        FROM 
+          "TransactionDetails" tD
+          LEFT JOIN "Seats" s ON (tD.seat_id = s.id)
+          LEFT JOIN "Flights" f ON (tD.flight_id = f.id)
+          LEFT JOIN "Transactions" t ON (tD.transaction_id = t.id)
+          LEFT JOIN "Customers" cs ON (t.customer_id = cs.id)
+          LEFT JOIN "Airplanes" a ON (f.airplane_id = a.id)
+          LEFT JOIN "Classes" c ON (a.class_id = c.id)
+          LEFT JOIN "Airports" dpA ON (f.departure_airport_id = dpA.id)
+				  LEFT JOIN "Airports" arA ON (f.arrival_airport_id = arA.id)
+          LEFT JOIN "Cities" dpC ON (dpA.city_id = dpC.id)
+				  LEFT JOIN "Cities" arC ON (arA.city_id = arC.id)
+        WHERE 
+          tD.id = ${req.params.id}
+        `, 
+      {
+        type: sequelize.QueryTypes.SELECT,
+      });
+
+      details[0].facilities = await sequelize.query(
+        `
+        SELECT
+          f.name "facilities"
+        FROM 
+          "AirplaneFacilities" af LEFT JOIN "Facilities" f ON(af.facility_id = f.id)
+        WHERE
+          af.airplane_id = ${details[0].airplane_id}
+        `,
+        {
+          type: sequelize.QueryTypes.SELECT,
+        },
+      );
+      
 
       if (!details) {
         return res.status(404).json({

@@ -142,7 +142,7 @@ module.exports = {
         },
       )
 
-      details[0].facilities = await sequelize.query(
+      const facilities = await sequelize.query(
         `
       SELECT
         f.name "facility_name"
@@ -155,6 +155,13 @@ module.exports = {
           type: sequelize.QueryTypes.SELECT,
         },
       );
+
+      const facilitiesArray = [];
+      facilities.forEach((e) =>{
+        facilitiesArray.push(e.facility_name);
+      })
+
+      details[0].facilities = facilitiesArray
 
       if (!details) {
         return res.status(404).json({

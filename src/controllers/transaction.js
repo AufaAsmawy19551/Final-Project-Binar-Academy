@@ -70,12 +70,16 @@ module.exports = {
       // create transaction
       const transaction = await Model.create({
         customer_id: 1,
+        date: Date.now(),
         payment_due_date: Date.now() + 1000 * 3600 * 24 * 2,
         status: 'unpaid',
       })
 
+      
       // create transaction details for all passenger_identity
       req.body.passenger_identity.forEach(async (passenger) => {
+        // console.log(Date.now() + 1000 * 3600 * 24 * 2);
+        // console.log(Date.parse(passenger.passenger_dob + "T00:00:00.000Z"));
         // create transaction details
         await TransactionDetail.create({
           transaction_id: transaction.id,
@@ -84,12 +88,12 @@ module.exports = {
           passenger_title: passenger.passenger_title,
           passenger_name: passenger.passenger_name,
           passenger_family_name: passenger.passenger_family_name,
-          // passenger_dob: passenger.passenger_dob,
+          // passenger_dob: new Date(new Date(passenger.passenger_dob).getTime),
           passenger_nationality: passenger.passenger_nationality,
           passenger_identity_card: passenger.passenger_identity_card,
           passenger_identity_card_publisher:
             passenger.passenger_identity_card_publisher,
-          // passenger_identity_card_due_date: passenger.passenger_identity_card_publisher,
+          // passenger_identity_card_due_date: new Date(new Date(passenger.passenger_identity_card_publisher).getTime),
           passenger_type: passenger.passenger_type,
           boarding_status: false,
         })
@@ -107,79 +111,114 @@ module.exports = {
 
   show: async (req, res, next) => {
     try {
-        
-
-      const details = await sequelize.query(
-        `
-        SELECT 
-          
-          t.id "transaction_id",
-          cs.id "customer_id",
-          cs.name "customer_name",
-          t.date "date",
-          t.payment_date "payment_date",
-          t.payment_due_date "payment_due_date",
-          t.status "payment_status",
-          a.id "airplane_id",
-          a.name "airplane_name",
-          a.code "airplane_logo",
-          a.logo "airplane_code",
-          s.id "seat_id",
-          s.number "seat_number",
-          c.id "class_id",
-          c.name "class",
-          f.id "flight_id",
-          dpA.id "departure_airport_id",
-          dpA.name "departure_airport",
-          dpC.name "departure_city",
-				  arA.id "arrival_airport_id",
-          arA.name "arrival_airport",
-				  arC.name "arrival_city",
-          tD.id "transaction_detail_id",
-          tD.passenger_title "passenger_title",
-          tD.passenger_name "passenger_name",
-          tD.passenger_family_name "passenger_family_name",
-          tD.passenger_dob "passenger_dob",
-          tD.passenger_nationality "passenger_nationality",
-          tD.passenger_identity_card "passenger_identity_cardy",
-          tD.passenger_identity_card_publisher "passenger_identity_card_publisher",
-          tD.passenger_identity_card_due_date "passenger_identity_card_due_date",
-          tD.passenger_type "passenger_type",
-          tD.passenger_type "passenger_type",
-          tD.boarding_status "boarding_status"
-        FROM 
-          "TransactionDetails" tD
-          LEFT JOIN "Seats" s ON (tD.seat_id = s.id)
-          LEFT JOIN "Flights" f ON (tD.flight_id = f.id)
-          LEFT JOIN "Transactions" t ON (tD.transaction_id = t.id)
-          LEFT JOIN "Customers" cs ON (t.customer_id = cs.id)
-          LEFT JOIN "Airplanes" a ON (f.airplane_id = a.id)
-          LEFT JOIN "Classes" c ON (a.class_id = c.id)
-          LEFT JOIN "Airports" dpA ON (f.departure_airport_id = dpA.id)
-				  LEFT JOIN "Airports" arA ON (f.arrival_airport_id = arA.id)
-          LEFT JOIN "Cities" dpC ON (dpA.city_id = dpC.id)
-				  LEFT JOIN "Cities" arC ON (arA.city_id = arC.id)
-        WHERE 
-          tD.id = ${req.params.id}
-        `, 
-      {
-        type: sequelize.QueryTypes.SELECT,
-      });
-
-      details[0].facilities = await sequelize.query(
+      const details = {}
+      const transaction = await sequelize.query(
         `
         SELECT
-          f.name "facilities"
+          t.id "transaction_id",
+          t.customer_id "customer_id",
+          t.date "payment_created_date",
+          t.payment_date "payment_date",
+          t.payment_due_date "payment_due_date",
+          t.status "status"
         FROM 
-          "AirplaneFacilities" af LEFT JOIN "Facilities" f ON(af.facility_id = f.id)
-        WHERE
-          af.airplane_id = ${details[0].airplane_id}
+          "Transactions" t
+        WHERE 
+          t.id = ${req.params.id}
         `,
         {
           type: sequelize.QueryTypes.SELECT,
         },
-      );
-      
+      )
+
+      const passengers = await sequelize.query(
+        `
+      SELECT
+        td.id "transaction_detail_id",
+        s.number "seat_number",
+        f.airplane_id "airplane_id",
+        td.passenger_title "passenger_title",
+        td.passenger_name "passenger_name",
+        td.passenger_family_name "passenger_family_name",
+        td.passenger_dob "passenger_dob",
+        td.passenger_nationality "passenger_nationality",
+        td.passenger_identity_card "passenger_identity_cardy",
+        td.passenger_identity_card_publisher "passenger_identity_card_publisher",
+        td.passenger_identity_card_due_date "passenger_identity_card_due_date",
+        td.passenger_type "passenger_type",
+        td.passenger_type "passenger_type",
+        td.boarding_status "boarding_status"
+      FROM 
+        "TransactionDetails" td
+        LEFT JOIN "Seats" s ON(td.seat_id = s.id)
+        LEFT JOIN "Flights" f ON(td.flight_id = f.id)
+      WHERE
+        td.transaction_id = ${transaction[0].transaction_id}
+      `,
+        {
+          type: sequelize.QueryTypes.SELECT,
+        },
+      )
+
+      const flight = await sequelize.query(
+        `
+			SELECT 
+        f.id,
+				dpA.name "departure_airport",
+				dpC.name "departure_city",
+				f.departure_date,
+				arA.name "arrival_airport",
+				arC.name "arrival_city",
+				f.arrival_date,
+				a.id "airplane_id",
+				a.name "airplane_name",
+				a.logo "airplane_logo",
+				a.code "airplane_code",
+				c.name "airplane_class",
+				f.price,
+				f.discount,
+				f.tax,
+				f.stock
+			FROM 
+				"Flights" f
+				LEFT JOIN "Airports" dpA ON (f.departure_airport_id = dpA.id)
+				LEFT JOIN "Airports" arA ON (f.arrival_airport_id = arA.id)
+				LEFT JOIN "Airplanes" a ON (f.airplane_id = a.id)
+				LEFT JOIN "Classes" c ON (a.class_id = c.id)
+				LEFT JOIN "Cities" dpC ON (dpA.city_id = dpC.id)
+				LEFT JOIN "Cities" arC ON (arA.city_id = arC.id)
+      WHERE 
+        f.id = ${passengers[0].airplane_id}
+			`,
+        {
+          type: sequelize.QueryTypes.SELECT,
+        },
+      )
+
+      const facilities = await sequelize.query(
+        `
+      SELECT
+        f.name "facility_name"
+      FROM 
+        "AirplaneFacilities" af LEFT JOIN "Facilities" f ON(af.facility_id = f.id)
+      WHERE
+        af.airplane_id = ${flight[0].airplane_id}
+      `,
+        {
+          type: sequelize.QueryTypes.SELECT,
+        },
+      )
+
+      const facilitiesArray = [];
+      facilities.forEach((e) =>{
+        facilitiesArray.push(e.facility_name);
+      })
+
+      flight[0].facilities = facilitiesArray;
+
+      details.transaction = transaction[0]
+      details.passengers = passengers
+      details.flight = flight[0]
 
       if (!details) {
         return res.status(404).json({

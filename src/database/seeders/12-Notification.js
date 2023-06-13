@@ -7,8 +7,9 @@ module.exports = {
         'Notifications', 
         [ 
           {
-            title:"Status pembayaran",
-            description: "Selesaikan pembayaran anda sebelum tanggal yang ditentukan",
+            category_id: 1,
+            title:"Segera Selesaikan Pembayaran Anda",
+            description: lore,
             date: new Date(),
             createdAt: new Date(),
 					  updatedAt: new Date(),        

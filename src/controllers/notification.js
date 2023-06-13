@@ -18,13 +18,12 @@ module.exports = {
 					data: validation.errors,
 				});
 			}
-
-			console.log('id= ' + req.user.id);
 			
 			const list = await sequelize.query(
 				`
 				SELECT
 				  n.id "notification_id",
+				  cat.name"category",
 				  n.title "notification_title",
 				  n.description "notification_description",
 				  n.date "date",
@@ -33,6 +32,7 @@ module.exports = {
 				  "Customers" c
 				  RIGHT JOIN "CustomerNotifications" cn ON (c.id = cn.customer_id)
 				  RIGHT JOIN "Notifications" n ON (cn.notification_id = n.id)
+				  RIGHT JOIN "Categories" cat ON (n.category_id = cat.id)
 				WHERE 
 				  c.id = ${req.user.id}
 				`,
@@ -86,11 +86,13 @@ module.exports = {
 				`
 				SELECT
 				  n.id "notification_id",
+				  cat.name "category",
 				  n.title "notification_title",
 				  n.description "notification_description",
 				  n.date "date"
 				FROM 
 				  "Notifications" n
+				  LEFT JOIN "Categories" cat ON (n.category_id = cat.id)
 				WHERE 
 				  n.id = ${req.params.id}
 				`,

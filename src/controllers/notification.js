@@ -31,8 +31,8 @@ module.exports = {
 				  cn.is_read "is_read"
 				FROM 
 				  "Customers" c
-				  LEFT JOIN "CustomerNotifications" cn ON (c.id = cn.customer_id)
-				  LEFT JOIN "Notifications" n ON (cn.notification_id = n.id)
+				  RIGHT JOIN "CustomerNotifications" cn ON (c.id = cn.customer_id)
+				  RIGHT JOIN "Notifications" n ON (cn.notification_id = n.id)
 				WHERE 
 				  c.id = ${req.user.id}
 				`,
@@ -121,7 +121,7 @@ module.exports = {
 		try {
 
 			const {id} = req.params;
-			const updated = await CustomerNotification.update({is_read: true}, {where: {id, customer_id: req.customer.id}});
+			const updated = await CustomerNotification.update({is_read: true}, {where: {notification_id: id, customer_id: req.user.id}, returning: true });
 			
 
 			if (!updated[1][0]) {

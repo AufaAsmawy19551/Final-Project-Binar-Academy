@@ -9,7 +9,7 @@ const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REFRESH_TOKEN, GOOGLE_SEN
 oauth2Client.setCredentials({ refresh_token: GOOGLE_REFRESH_TOKEN });
 
 module.exports = {
-	sendEmail: (to, subject, html) => {
+	sendMail: (to, subject, html) => {
 		return new Promise(async (resolve, reject) => {
 			const accessToken = await oauth2Client.getAccessToken();
 

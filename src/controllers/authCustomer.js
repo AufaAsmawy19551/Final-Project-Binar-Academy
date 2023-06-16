@@ -57,7 +57,7 @@ module.exports = {
   saveOtp: async (req, res, next) => {
     try {
       const validation = await Validator.validate(req.body, {
-        otp_code: "required|string",
+        otp_code: "required|integer|digits:6",
       });
 
       if (validation.failed) {
@@ -68,7 +68,7 @@ module.exports = {
         });
       }
 
-      const { otp_code } = req.query;
+      const { otp_code } = req.body;
       const email = req.body.email;
 
       const getOtpCodeFromDatabase = async (email) => {

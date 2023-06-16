@@ -28,7 +28,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       token: {
-        type: Sequelize.STRINZG
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

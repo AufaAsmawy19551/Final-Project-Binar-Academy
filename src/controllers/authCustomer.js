@@ -263,20 +263,19 @@ module.exports = {
 },
   saveForgotPassword: async (req, res, next) => {
     try {
-      const { new_password, confirm_new_password } = req.body;
+      const { new_password } = req.body;
       const { token } = req.query;
 
-      // const validation = await Validator.validate(req.body, {
-      //   password: "required|string|between:8,255|confirmed",
-      // });
+      const validation = await Validator.validate(req.body, {
+        new_password: "required|string|between:8,255|confirmed",
+      });
 
-      // if (validation.failed) {
-      //   return res.status(400).json({
-      //     success: false,
-      //     message: "Bad Request",
-      //     data: validation.errors,
-      //   });
-      // }
+      if (validation.failed) {
+        return res.render("auth/reset-password", {
+          message: "confirm password does not match!",
+          token,
+        });
+      }
 
       // buat service dan response di sini!
       if (!token) {
@@ -285,12 +284,7 @@ module.exports = {
           token,
         });
       }
-      if (new_password != confirm_new_password) {
-        return res.render("auth/reset-password", {
-          message: "confirm password does not match!",
-          token,
-        });
-      }
+
       const data = await jwt.verify(token, JWT_SECRET_KEY);
 
       const hashPassword = await bcrypt.hash(new_password, 10);

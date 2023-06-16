@@ -9,7 +9,7 @@ module.exports = {
 			[
 				{
 					name: 'Aufa',
-					email: 'aufamuhammad@gmail.com',
+					email: 'aufamuhammad19551@gmail.com',
 					email_verified: true,
 					phone: '12345678910',
 					password: await bcrypt.hash('password', 10),

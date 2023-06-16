@@ -5,6 +5,7 @@ const notification = require('../../controllers/notification');
 const transaction = require('../../controllers/transaction');
 const authCustomer = require('../../controllers/authCustomer');
 const customer = require('../../controllers/customer');
+const country = require('../../controllers/country');
 
 router.prefix(
 	'/customer',
@@ -22,8 +23,13 @@ router.prefix(
 			route.get('/:id', transaction.show);
 		});
 
+		route.prefix('/countries', async (route) => {
+			route.get('/', country.index);
+			route.get('/:id', country.show);
+		});
+
 		route.prefix('/users', async (route) => {		
-			route.get('/', customer.show);
+			route.get('/', authCustomer.userDetails);
 			route.put('/', customer.update);			
 		});
 
@@ -32,8 +38,8 @@ router.prefix(
 		});
 
 	},
-	middlewares.test3,
-	middlewares.test4
+	middlewares.authentication,
+	middlewares.authorizarion
 );
 
 module.exports = router;

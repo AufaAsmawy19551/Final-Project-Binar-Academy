@@ -26,7 +26,7 @@ module.exports = {
         })
       }
 
-      const list = await Model.findAll()
+      const list = await Model.findAll({where: {customer_id: req.user.id}})
 
       return res.status(200).json({
         success: true,
@@ -69,7 +69,7 @@ module.exports = {
 
       // create transaction
       const transaction = await Model.create({
-        customer_id: 1,
+        customer_id: req.user.id,
         date: Date.now(),
         payment_due_date: Date.now() + 1000 * 3600 * 24 * 2,
         status: 'unpaid',

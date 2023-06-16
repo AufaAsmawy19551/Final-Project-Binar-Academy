@@ -1,3 +1,4 @@
+require('dotenv').config();
 const modelName = 'Customer'
 const { Customer, sequelize } = require('../database/models')
 const Validator = require('../utils/validatorjs')
@@ -30,6 +31,7 @@ module.exports = {
       const customer = await Customer.create({
         name: name,
         email: email,
+        email_verified: false,
 		    phone: phone, 
         password: hashPassword, 
       })
@@ -126,6 +128,39 @@ module.exports = {
       next(error)
     }
   },
+
+  userDetails: async (req, res, next) => {
+		try {
+			const details = await Customer.findOne({
+          where: { id: req.user.id }, 
+          attributes:[
+            'id',
+            'name',
+            'email',
+            'email_verified',
+            'phone',
+            'createdAt',
+            'updatedAt',
+          ]
+        });
+
+			if (!details) {
+				return res.status(404).json({
+					success: false,
+					message: `${modelName} with id ${req.user.id} not found!`,
+					error: {},
+				});
+			}
+
+			return res.status(200).json({
+				success: true,
+				message: `Success get details of ${modelName} with id ${req.user.id}!`,
+				data: details,
+			});
+		} catch (error) {
+			next(error);
+		}
+	},
 
   requestForgotPassword: async (req, res, next) => {
     try {

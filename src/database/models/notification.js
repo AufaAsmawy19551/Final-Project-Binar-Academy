@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Notification.init({
+    category_id: DataTypes.INTEGER,
     title: DataTypes.STRING,
     description: DataTypes.STRING,
     date: DataTypes.DATE

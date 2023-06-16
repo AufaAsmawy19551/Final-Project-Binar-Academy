@@ -12,6 +12,18 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
+      title_id: {
+        type: Sequelize.INTEGER,
+        references: {
+					model: 'Titles',
+					key: 'id',
+				},
+				onUpdate: 'CASCADE',
+				onDelete: 'CASCADE',
+      },
+      family_name: {
+        type: Sequelize.STRING
+      },
       email: {
         type: Sequelize.STRING
       },

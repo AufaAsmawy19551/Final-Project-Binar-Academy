@@ -1,11 +1,15 @@
 const modelName = 'CustomerNotification';
-const { CustomerNotification: Model, sequelize } = require('../database/models');
+const { CustomerNotification: Model, Customer, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
 
 module.exports = {
 	index: async (req, res, next) => {
 		try {
-			const validation = await Validator.validate(req.query, {});
+			const validation = await Validator.validate(req.query, {
+				customer_id: 'integer|exist:Customers,id',
+   				notification_id: 'integer|exist:Notifications,id',
+    			is_read: 'integer|boolean',
+			});
 
 			if (validation.failed) {
 				return res.status(400).json({
@@ -14,8 +18,14 @@ module.exports = {
 					data: validation.errors,
 				});
 			}
-
-			const list = await Model.findAll();
+			
+			const list = await Model.findAll({
+				where: {customer_id: req.customer.id},
+				include: [{
+					model: Customer,
+					as: 'customernotif',
+				}]
+			});
 
 			return res.status(200).json({
 				success: true,

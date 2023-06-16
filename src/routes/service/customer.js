@@ -5,6 +5,7 @@ const notification = require('../../controllers/notification');
 const transaction = require('../../controllers/transaction');
 const authCustomer = require('../../controllers/authCustomer');
 const customer = require('../../controllers/customer');
+const country = require('../../controllers/country');
 
 router.prefix(
 	'/customer',
@@ -20,6 +21,11 @@ router.prefix(
 			route.get('/', transaction.index);
 			route.post('/', transaction.store);
 			route.get('/:id', transaction.show);
+		});
+
+		route.prefix('/countries', async (route) => {
+			route.get('/', country.index);
+			route.get('/:id', country.show);
 		});
 
 		route.prefix('/users', async (route) => {		

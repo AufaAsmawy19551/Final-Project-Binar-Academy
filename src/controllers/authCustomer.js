@@ -358,7 +358,7 @@ module.exports = {
         });
       }
 
-      // buat service dan response di sini!
+      Customer.update({token: null}, {where:{id: req.user.id}})
       return res.status(200).json({
         success: true,
         message: "Logout Successful",

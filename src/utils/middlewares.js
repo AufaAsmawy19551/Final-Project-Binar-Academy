@@ -1,4 +1,5 @@
 require('dotenv').config();
+const { Customer, sequelize } = require("../database/models");
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET_KEY } = process.env;
 
@@ -10,7 +11,7 @@ module.exports = {
 			if (!authorization) {
 				return res.status(401).json({
 					status: false,
-					message: "you're not authorized!",
+					message: "you are unauthenticated!",
 					data: null,
 				});
 			}
@@ -23,6 +24,23 @@ module.exports = {
 				email_verified: data.email_verified,
 			};
 
+			if((new Date() - (data.iat * 1000)) > (1000 * 3600 * 2)){
+				return res.status(401).json({
+					status: false,
+					message: "your token is expired!",
+					data: null,
+				});
+			}
+
+			const customer = await Customer.findOne({where: {id: req.user.id}});
+			if (customer.token == null) {
+				return res.status(401).json({
+					status: false,
+					message: "you are unauthenticated!",
+					data: null,
+				});
+			}
+
 			next();
 		} catch (err) {
 			next(err);
@@ -30,7 +48,13 @@ module.exports = {
 	},
 
 	authorizarion: async (req, res, next) => {
-		console.table(req.user);
+		if (!req.user.type == 'customer') {
+				return res.status(401).json({
+					status: false,
+					message: "you are unauthorized!",
+					data: null,
+				});
+			}
 		next();
 	},
 

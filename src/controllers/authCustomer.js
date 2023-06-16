@@ -117,6 +117,7 @@ module.exports = {
       }
 
       const token = await jwt.sign(payload, JWT_SECRET_KEY)
+      Customer.update({token: token}, {where: {id: customer.id}});
       return res.status(200).json({
         success: true,
         message: 'login success!',

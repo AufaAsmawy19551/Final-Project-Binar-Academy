@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     passenger_dob: DataTypes.DATE,
     passenger_nationality_id: DataTypes.INTEGER,
     passenger_identity_card: DataTypes.STRING,
-    passenger_identity_card_publisher: DataTypes.STRING,
+    passenger_identity_card_publisher_id: DataTypes.INTEGER,
     passenger_identity_card_due_date: DataTypes.DATE,
     passenger_type: DataTypes.STRING,
     boarding_status: DataTypes.BOOLEAN

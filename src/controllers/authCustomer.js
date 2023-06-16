@@ -31,6 +31,7 @@ module.exports = {
       const hashPassword = await bcrypt.hash(password, 10);
       const customer = await Customer.create({
         name: name,
+        title_id: 1,
         email: email,
         email_verified: false,
 		    phone: phone, 
@@ -46,11 +47,7 @@ module.exports = {
       return res.status(200).json({
         success: true,
         message: `Success create new ${modelName}!`,
-        data: {
-          name: customer.name,
-          email: customer.email,
-          phone: customer.phone,
-        },
+        data: {}
       });
     } catch (error) {
       next(error);

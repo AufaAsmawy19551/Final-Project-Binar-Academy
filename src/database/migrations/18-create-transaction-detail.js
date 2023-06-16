@@ -56,18 +56,24 @@ module.exports = {
 			},
 			passenger_nationality_id: {
 				type: Sequelize.INTEGER,
-			references: {
-				model: 'Countries',
-				key: 'id',
-			},
-			onUpdate: 'CASCADE',
-			onDelete: 'CASCADE',
+				references: {
+					model: 'Countries',
+					key: 'id',
+				},
+				onUpdate: 'CASCADE',
+				onDelete: 'CASCADE',
 			},
 			passenger_identity_card: {
 				type: Sequelize.STRING,
 			},
-			passenger_identity_card_publisher: {
-				type: Sequelize.STRING,
+			passenger_identity_card_publisher_id: {
+				type: Sequelize.INTEGER,
+				references: {
+					model: 'Countries',
+					key: 'id',
+				},
+				onUpdate: 'CASCADE',
+				onDelete: 'CASCADE',
 			},
 			passenger_identity_card_due_date: {
 				type: Sequelize.DATE,

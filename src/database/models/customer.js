@@ -28,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     email_verified: DataTypes.BOOLEAN,
     phone: DataTypes.STRING,
     password: DataTypes.STRING,
-    otp_code: DataTypes.STRING
+    otp_code: DataTypes.STRING,
+    token: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Customer',

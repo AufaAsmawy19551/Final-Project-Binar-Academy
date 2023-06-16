@@ -16,7 +16,9 @@ router.prefix(
 			route.post('/save-otp', authCustomer.saveOtp);
 			route.post('/login', authCustomer.login);
 			route.post('/request-forgot-password', authCustomer.requestForgotPassword);
+			route.get('/reset-password', authCustomer.resetPasswordPage)
 			route.post('/save-forgot-password', authCustomer.saveForgotPassword);
+			route.get('/oauth', authCustomer.googleOauth2)
 		});
 	
 		route.prefix('/flights', async (route) => {

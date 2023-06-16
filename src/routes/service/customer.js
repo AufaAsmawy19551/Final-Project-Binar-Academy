@@ -23,7 +23,7 @@ router.prefix(
 		});
 
 		route.prefix('/users', async (route) => {		
-			route.get('/', customer.show);
+			route.get('/', authCustomer.userDetails);
 			route.put('/', customer.update);			
 		});
 
@@ -32,8 +32,8 @@ router.prefix(
 		});
 
 	},
-	middlewares.test3,
-	middlewares.test4
+	middlewares.authentication,
+	middlewares.authorizarion
 );
 
 module.exports = router;

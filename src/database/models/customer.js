@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 
       // relasi many-to-many -> Notification through: CustomerNotification
       Customer.belongsToMany(models.Notification, {foreignKey: 'customer_id', as: 'customer', through: models.CustomerNotification});
+      // Customer.hasMany(models.CustomerNotification, {foreignKey: 'customer_id', as: 'customernotif'});
 
        // relasi one-to-many -> transaction
       // Customer.hasMany(models.Transaction, {foreignKey: 'customer_id', as: 'customer_transaction'});

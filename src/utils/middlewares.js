@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET_KEY } = process.env;
 
 module.exports = {
-	auth: async (req, res, next) => {
+	authentication: async (req, res, next) => {
 		try {
 			const { authorization } = req.headers;
 
@@ -15,11 +15,12 @@ module.exports = {
 				});
 			}
 
-			const data = await jwt.verify(authorization, JWT_SECRET_KEY);
+			const data = await jwt.verify(authorization.split(" ")[1], JWT_SECRET_KEY);
 			req.user = {
 				id: data.id,
 				name: data.name,
-				email: data.email,
+				type: data.type,
+				email_verified: data.email_verified,
 			};
 
 			next();
@@ -27,6 +28,12 @@ module.exports = {
 			next(err);
 		}
 	},
+
+	authorizarion: async (req, res, next) => {
+		console.table(req.user);
+		next();
+	},
+
 
 	test1: async (req, res, next) => {
 		console.log('Success test 1');

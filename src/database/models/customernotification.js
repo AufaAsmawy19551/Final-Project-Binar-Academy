@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      // CustomerNotification.belongsTo(models.Customer, {foreignKey: 'id', as: 'customernotif'});
       
     }
   }

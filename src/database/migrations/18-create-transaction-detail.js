@@ -36,8 +36,14 @@ module.exports = {
 				onUpdate: 'CASCADE',
 				onDelete: 'CASCADE',
 			},
-			passenger_title: {
-				type: Sequelize.STRING,
+			passenger_title_id: {
+				type: Sequelize.INTEGER,
+			references: {
+				model: 'Titles',
+				key: 'id',
+			},
+			onUpdate: 'CASCADE',
+			onDelete: 'CASCADE',
 			},
 			passenger_name: {
 				type: Sequelize.STRING,
@@ -48,8 +54,14 @@ module.exports = {
 			passenger_dob: {
 				type: Sequelize.DATE,
 			},
-			passenger_nationality: {
-				type: Sequelize.STRING,
+			passenger_nationality_id: {
+				type: Sequelize.INTEGER,
+			references: {
+				model: 'Countries',
+				key: 'id',
+			},
+			onUpdate: 'CASCADE',
+			onDelete: 'CASCADE',
 			},
 			passenger_identity_card: {
 				type: Sequelize.STRING,

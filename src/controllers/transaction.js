@@ -44,15 +44,15 @@ module.exports = {
         'customer_identity.name': 'required|string|between:1,255',
         'customer_identity.email': 'required|email',
         'customer_identity.phone': 'required|integer|digits_between:9,12',
-        'customer_identity.title': 'required|string|between:1,255',
+        'customer_identity.title_id': 'required|integer|exist:Titles,id',
         'customer_identity.family_name': 'required|string|between:1,255',
         'passenger_identity.*.flight_id': 'required|integer|exist:Flights,id',
         'passenger_identity.*.seat_id': 'required|integer|exist:Seats,id',
-        'passenger_identity.*.passenger_title': 'required|string|between:1,255',
+        'passenger_identity.*.passenger_title_id': 'required|integer|exist:Titles,id',
         'passenger_identity.*.passenger_name': 'required|string|between:1,255',
         'passenger_identity.*.passenger_family_name': 'string|between:1,255',
         'passenger_identity.*.passenger_dob': 'required|date',
-        'passenger_identity.*.passenger_nationality': 'required|string|between:1,255',
+        'passenger_identity.*.passenger_nationality_id': 'required|integer|exist:Countries,id',
         'passenger_identity.*.passenger_identity_card': 'required|string|size:16',
         'passenger_identity.*.passenger_identity_card_publisher': 'string',
         'passenger_identity.*.passenger_identity_card_due_date': 'date',
@@ -85,11 +85,11 @@ module.exports = {
           transaction_id: transaction.id,
           flight_id: passenger.flight_id,
           seat_id: passenger.seat_id,
-          passenger_title: passenger.passenger_title,
+          passenger_title_id: passenger.passenger_title,
           passenger_name: passenger.passenger_name,
           passenger_family_name: passenger.passenger_family_name,
           // passenger_dob: new Date(new Date(passenger.passenger_dob).getTime),
-          passenger_nationality: passenger.passenger_nationality,
+          passenger_nationality_id: passenger.passenger_nationality_id,
           passenger_identity_card: passenger.passenger_identity_card,
           passenger_identity_card_publisher:
             passenger.passenger_identity_card_publisher,
@@ -137,11 +137,13 @@ module.exports = {
         td.id "transaction_detail_id",
         s.number "seat_number",
         f.airplane_id "airplane_id",
-        td.passenger_title "passenger_title",
+        td.passenger_title_id "passenger_title_id",
+        t.name "passenger_title",
         td.passenger_name "passenger_name",
         td.passenger_family_name "passenger_family_name",
         td.passenger_dob "passenger_dob",
-        td.passenger_nationality "passenger_nationality",
+        td.passenger_nationality_id "passenger_nationality_id",
+        c.name "passenger_nationality",
         td.passenger_identity_card "passenger_identity_cardy",
         td.passenger_identity_card_publisher "passenger_identity_card_publisher",
         td.passenger_identity_card_due_date "passenger_identity_card_due_date",
@@ -152,6 +154,8 @@ module.exports = {
         "TransactionDetails" td
         LEFT JOIN "Seats" s ON(td.seat_id = s.id)
         LEFT JOIN "Flights" f ON(td.flight_id = f.id)
+        LEFT JOIN "Titles" t ON(td.passenger_title_id = t.id)
+        LEFT JOIN "Countries" c ON(td.passenger_nationality_id = c.id)
       WHERE
         td.transaction_id = ${transaction[0].transaction_id}
       `,

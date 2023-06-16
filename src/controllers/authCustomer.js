@@ -183,18 +183,27 @@ module.exports = {
 
   userDetails: async (req, res, next) => {
 		try {
-			const details = await Customer.findOne({
-          where: { id: req.user.id }, 
-          attributes:[
-            'id',
-            'name',
-            'email',
-            'email_verified',
-            'phone',
-            'createdAt',
-            'updatedAt',
-          ]
-        });
+      const details = await sequelize.query(
+        `
+        SELECT
+          c.id "customer_id",
+          c.title_id "customer_title_id",
+          t.name "customer_title",
+          c.name "customer_name",
+          c.family_name "customer_family_name",
+          c.email "email",
+          c.email_verified "email_verified",
+          c.phone "phone"
+        FROM 
+          "Customers" c
+          LEFT JOIN "Titles" t ON (c.title_id = t.id)
+        WHERE 
+          c.id = ${req.user.id}
+        `,
+        {
+          type: sequelize.QueryTypes.SELECT,
+        },
+      )
 
 			if (!details) {
 				return res.status(404).json({

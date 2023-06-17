@@ -24,7 +24,7 @@ module.exports = {
       code: {
         type: Sequelize.STRING
       },
-      timeZone: {
+      time_zone: {
         type: Sequelize.STRING
       },
       createdAt: {

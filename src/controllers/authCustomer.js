@@ -5,13 +5,13 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { generateOTP, sendOTP } = require("../utils/otp");
 const nodemailer = require("../utils/nodemailer");
-const oauth2 = require('../utils/oauth2')
+const oauth2 = require("../utils/oauth2");
 const { JWT_SECRET_KEY } = process.env;
 
 module.exports = {
   register: async (req, res, next) => {
     try {
-      const { name, email, phone, password } = req.body;
+      const { name, email, phone, password} = req.body;
       const validation = await Validator.validate(req.body, {
         name: "required|string",
         email: "required|email|unique:Customers,email",
@@ -27,27 +27,34 @@ module.exports = {
         });
       }
       // buat service dan response di sini!
-
       const hashPassword = await bcrypt.hash(password, 10);
       const customer = await Customer.create({
         name: name,
         title_id: 1,
         email: email,
         email_verified: false,
-		    phone: phone, 
-        password: hashPassword, 
+        phone: phone,
+        password: hashPassword,
+      });
+     
+        const payload = {
+          id: customer.id
+        }
+      const token = await jwt.sign(payload, JWT_SECRET_KEY);
+      const url = `${req.protocol}://${req.get('host')}/api/web/customer-auth/get-otp?token=${token}`
+
+      const otp = Math.floor(100000 + Math.random() * 999999);
+      const html = await nodemailer.getHtml('otp.ejs', {
+        name: customer.name,
+        url,
+        otp
       })
-
-      // const otpCode = generateOTP();
-      // await sendOTP(email, otpCode);
-
-      // await saveOtpCodeToDatabase(email, otpCode);
-      // code untuk mengirim kode otp ke email
-
+      nodemailer.sendMail(customer.email, "send OTP", html)
+      
       return res.status(200).json({
         success: true,
         message: `Success create new ${modelName}!`,
-        data: {}
+        data: {},
       });
     } catch (error) {
       next(error);
@@ -56,6 +63,9 @@ module.exports = {
 
   saveOtp: async (req, res, next) => {
     try {
+      const { otp_code } = req.body;
+      const email = req.body.email;
+
       const validation = await Validator.validate(req.body, {
         otp_code: "required|integer|digits:6",
       });
@@ -68,19 +78,9 @@ module.exports = {
         });
       }
 
-      const { otp_code } = req.body;
-      const email = req.body.email;
+      const customer = await Customer.findOne({ where: { email } });
 
-      const getOtpCodeFromDatabase = async (email) => {
-        try {
-          const customer = await Customer.findOne({ where: { email } });
-          return customer.otpCode;
-        } catch (error) {
-          throw error;
-        }
-      };
-
-      const savedOtpCode = await getOtpCodeFromDatabase(email);
+      const savedOtpCode = await customer;
       if (otp_code !== savedOtpCode) {
         return res.status(400).json({
           success: false,
@@ -133,7 +133,8 @@ module.exports = {
       if (!customer) {
         return res.status(400).json({
           success: false,
-          message: "Haven't registered an account yet, please register an account first!",
+          message:
+            "Haven't registered an account yet, please register an account first!",
           data: null,
         });
       }
@@ -164,8 +165,8 @@ module.exports = {
         email_verified: customer.email_verified,
       };
 
-      const token = await jwt.sign(payload, JWT_SECRET_KEY)
-      Customer.update({token: token}, {where: {id: customer.id}});
+      const token = await jwt.sign(payload, JWT_SECRET_KEY);
+      Customer.update({ token: token }, { where: { id: customer.id } });
       return res.status(200).json({
         success: true,
         message: "login success!",
@@ -179,7 +180,7 @@ module.exports = {
   },
 
   userDetails: async (req, res, next) => {
-		try {
+    try {
       const details = await sequelize.query(
         `
         SELECT
@@ -199,26 +200,26 @@ module.exports = {
         `,
         {
           type: sequelize.QueryTypes.SELECT,
-        },
-      )
+        }
+      );
 
-			if (!details) {
-				return res.status(404).json({
-					success: false,
-					message: `${modelName} with id ${req.user.id} not found!`,
-					error: {},
-				});
-			}
+      if (!details) {
+        return res.status(404).json({
+          success: false,
+          message: `${modelName} with id ${req.user.id} not found!`,
+          error: {},
+        });
+      }
 
-			return res.status(200).json({
-				success: true,
-				message: `Success get details of ${modelName} with id ${req.user.id}!`,
-				data: details,
-			});
-		} catch (error) {
-			next(error);
-		}
-	},
+      return res.status(200).json({
+        success: true,
+        message: `Success get details of ${modelName} with id ${req.user.id}!`,
+        data: details,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 
   requestForgotPassword: async (req, res, next) => {
     try {
@@ -264,9 +265,9 @@ module.exports = {
     }
   },
   resetPasswordPage: (req, res) => {
-    const {token} = req.query;
-    return res.render('auth/reset-password', {message: null, token});
-},
+    const { token } = req.query;
+    return res.render("auth/reset-password", { message: null, token });
+  },
   saveForgotPassword: async (req, res, next) => {
     try {
       const { new_password } = req.body;
@@ -358,12 +359,12 @@ module.exports = {
         });
       }
 
-      Customer.update({token: null}, {where:{id: req.user.id}})
+      Customer.update({ token: null }, { where: { id: req.user.id } });
       return res.status(200).json({
         success: true,
         message: "Logout Successful",
-        data: null, 
-      })
+        data: null,
+      });
     } catch (error) {
       next(error);
     }

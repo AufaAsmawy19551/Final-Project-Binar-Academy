@@ -52,7 +52,7 @@ module.exports = {
 				type: Sequelize.STRING,
 			},
 			passenger_dob: {
-				type: Sequelize.DATE,
+				type: Sequelize.DATEONLY,
 			},
 			passenger_nationality_id: {
 				type: Sequelize.INTEGER,
@@ -76,7 +76,7 @@ module.exports = {
 				onDelete: 'CASCADE',
 			},
 			passenger_identity_card_due_date: {
-				type: Sequelize.DATE,
+				type: Sequelize.DATEONLY,
 			},
 			passenger_type: {
 				type: Sequelize.STRING,

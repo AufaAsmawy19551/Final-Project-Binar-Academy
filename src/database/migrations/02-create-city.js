@@ -21,6 +21,12 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
+      code: {
+        type: Sequelize.STRING
+      },
+      time_zone: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

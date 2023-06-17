@@ -3,12 +3,6 @@ const {
   Transaction: Model,
   TransactionDetail,
   Customer,
-  Flight,
-  Airplane,
-  Airport,
-  Class,
-  Seat,
-  Facility,
   sequelize,
 } = require('../database/models')
 const Validator = require('../utils/validatorjs')
@@ -78,11 +72,7 @@ module.exports = {
 
       Customer.update({title_id: req.body.customer_identity.title_id, family_name: req.body.customer_identity.family_name}, {where: {id: req.user.id}})
 
-      // create transaction details for all passenger_identity
       req.body.passenger_identity.forEach(async (passenger) => {
-        // console.log(Date.now() + 1000 * 3600 * 24 * 2);
-        // console.log(Date.parse(passenger.passenger_dob + "T00:00:00.000Z"));
-        // create transaction details
         await TransactionDetail.create({
           transaction_id: transaction.id,
           flight_id: passenger.flight_id,
@@ -90,12 +80,12 @@ module.exports = {
           passenger_title_id: passenger.passenger_title_id,
           passenger_name: passenger.passenger_name,
           passenger_family_name: passenger.passenger_family_name,
-          // passenger_dob: new Date(new Date(passenger.passenger_dob).getTime),
+          passenger_dob: new Date(passenger.passenger_dob),
           passenger_nationality_id: passenger.passenger_nationality_id,
           passenger_identity_card: passenger.passenger_identity_card,
           passenger_identity_card_publisher_id:
             passenger.passenger_identity_card_publisher_id,
-          // passenger_identity_card_due_date: new Date(new Date(passenger.passenger_identity_card_publisher).getTime),
+          passenger_identity_card_due_date: new Date(passenger.passenger_identity_card_due_date),
           passenger_type: passenger.passenger_type,
           boarding_status: false,
         })
@@ -181,10 +171,16 @@ module.exports = {
 			SELECT 
         f.id,
 				dpA.name "departure_airport",
+				dpA.code "departure_airport_code",
 				dpC.name "departure_city",
+				dpC.code "departure_city_code",
+				dpC.time_zone "departure_city_time_zone",
 				f.departure_date,
 				arA.name "arrival_airport",
+				arA.code "arrival_airport_code",
 				arC.name "arrival_city",
+				arC.code "arrival_city_code",
+				arC.time_zone "arrival_city_time_zone",
 				f.arrival_date,
 				a.id "airplane_id",
 				a.name "airplane_name",

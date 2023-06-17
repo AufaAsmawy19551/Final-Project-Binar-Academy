@@ -22,8 +22,8 @@ module.exports = {
 				},
 				{
 					city_id: 2,
-					name: 'Adi Sutjipto (YOG)',
-					code: 'CGK',
+					name: 'Adi Sutjipto',
+					code: 'YOG',
 					createdAt: new Date(),
 					updatedAt: new Date(),
 				},

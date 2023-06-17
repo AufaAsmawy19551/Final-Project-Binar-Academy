@@ -2,12 +2,7 @@ const modelName = 'Transaction'
 const {
   Transaction: Model,
   TransactionDetail,
-  Flight,
-  Airplane,
-  Airport,
-  Class,
-  Seat,
-  Facility,
+  Customer,
   sequelize,
 } = require('../database/models')
 const Validator = require('../utils/validatorjs')
@@ -44,17 +39,17 @@ module.exports = {
         'customer_identity.name': 'required|string|between:1,255',
         'customer_identity.email': 'required|email',
         'customer_identity.phone': 'required|integer|digits_between:9,12',
+        'customer_identity.title_id': 'required|integer|exist:Titles,id',
+        'customer_identity.family_name': 'required|string|between:1,255',
         'passenger_identity.*.flight_id': 'required|integer|exist:Flights,id',
         'passenger_identity.*.seat_id': 'required|integer|exist:Seats,id',
-        'passenger_identity.*.passenger_title': 'required|string|between:1,255',
+        'passenger_identity.*.passenger_title_id': 'required|integer|exist:Titles,id',
         'passenger_identity.*.passenger_name': 'required|string|between:1,255',
         'passenger_identity.*.passenger_family_name': 'string|between:1,255',
         'passenger_identity.*.passenger_dob': 'required|date',
-        'passenger_identity.*.passenger_nationality':
-          'required|string|between:1,255',
-        'passenger_identity.*.passenger_identity_card':
-          'required|string|size:16',
-        'passenger_identity.*.passenger_identity_card_publisher': 'string',
+        'passenger_identity.*.passenger_nationality_id': 'required|integer|exist:Countries,id',
+        'passenger_identity.*.passenger_identity_card': 'required|string|size:16',
+        'passenger_identity.*.passenger_identity_card_publisher_id': 'required|integer|exist:Countries,id',
         'passenger_identity.*.passenger_identity_card_due_date': 'date',
         'passenger_identity.*.passenger_type': 'string|between:1,10',
       })
@@ -75,25 +70,22 @@ module.exports = {
         status: 'unpaid',
       })
 
-      
-      // create transaction details for all passenger_identity
+      Customer.update({title_id: req.body.customer_identity.title_id, family_name: req.body.customer_identity.family_name}, {where: {id: req.user.id}})
+
       req.body.passenger_identity.forEach(async (passenger) => {
-        // console.log(Date.now() + 1000 * 3600 * 24 * 2);
-        // console.log(Date.parse(passenger.passenger_dob + "T00:00:00.000Z"));
-        // create transaction details
         await TransactionDetail.create({
           transaction_id: transaction.id,
           flight_id: passenger.flight_id,
           seat_id: passenger.seat_id,
-          passenger_title: passenger.passenger_title,
+          passenger_title_id: passenger.passenger_title_id,
           passenger_name: passenger.passenger_name,
           passenger_family_name: passenger.passenger_family_name,
-          // passenger_dob: new Date(new Date(passenger.passenger_dob).getTime),
-          passenger_nationality: passenger.passenger_nationality,
+          passenger_dob: new Date(passenger.passenger_dob),
+          passenger_nationality_id: passenger.passenger_nationality_id,
           passenger_identity_card: passenger.passenger_identity_card,
-          passenger_identity_card_publisher:
-            passenger.passenger_identity_card_publisher,
-          // passenger_identity_card_due_date: new Date(new Date(passenger.passenger_identity_card_publisher).getTime),
+          passenger_identity_card_publisher_id:
+            passenger.passenger_identity_card_publisher_id,
+          passenger_identity_card_due_date: new Date(passenger.passenger_identity_card_due_date),
           passenger_type: passenger.passenger_type,
           boarding_status: false,
         })
@@ -131,19 +123,30 @@ module.exports = {
         },
       )
 
+      if(transaction.length == 0){
+        return res.status(404).json({
+          success: false,
+          message: `Transaction with id ${req.params.id} not found!`,
+          error: {},
+        })
+      }
+
       const passengers = await sequelize.query(
         `
       SELECT
         td.id "transaction_detail_id",
         s.number "seat_number",
         f.airplane_id "airplane_id",
-        td.passenger_title "passenger_title",
+        td.passenger_title_id "passenger_title_id",
+        t.name "passenger_title",
         td.passenger_name "passenger_name",
         td.passenger_family_name "passenger_family_name",
         td.passenger_dob "passenger_dob",
-        td.passenger_nationality "passenger_nationality",
+        td.passenger_nationality_id "passenger_nationality_id",
+        nc.name "passenger_nationality",
         td.passenger_identity_card "passenger_identity_cardy",
-        td.passenger_identity_card_publisher "passenger_identity_card_publisher",
+        td.passenger_identity_card_publisher_id "passenger_identity_card_publisher_id",
+        pc.name "passenger_identity_card_publisher",
         td.passenger_identity_card_due_date "passenger_identity_card_due_date",
         td.passenger_type "passenger_type",
         td.passenger_type "passenger_type",
@@ -152,6 +155,9 @@ module.exports = {
         "TransactionDetails" td
         LEFT JOIN "Seats" s ON(td.seat_id = s.id)
         LEFT JOIN "Flights" f ON(td.flight_id = f.id)
+        LEFT JOIN "Titles" t ON(td.passenger_title_id = t.id)
+        LEFT JOIN "Countries" nc ON(td.passenger_nationality_id = nc.id)
+        LEFT JOIN "Countries" pc ON(td.passenger_identity_card_publisher_id = pc.id)
       WHERE
         td.transaction_id = ${transaction[0].transaction_id}
       `,
@@ -165,10 +171,16 @@ module.exports = {
 			SELECT 
         f.id,
 				dpA.name "departure_airport",
+				dpA.code "departure_airport_code",
 				dpC.name "departure_city",
+				dpC.code "departure_city_code",
+				dpC.time_zone "departure_city_time_zone",
 				f.departure_date,
 				arA.name "arrival_airport",
+				arA.code "arrival_airport_code",
 				arC.name "arrival_city",
+				arC.code "arrival_city_code",
+				arC.time_zone "arrival_city_time_zone",
 				f.arrival_date,
 				a.id "airplane_id",
 				a.name "airplane_name",
@@ -194,6 +206,14 @@ module.exports = {
           type: sequelize.QueryTypes.SELECT,
         },
       )
+
+      if(flight.length == 0){
+        return res.status(404).json({
+          success: false,
+          message: `Flight with id ${passengers[0].airplane_id} not found!`,
+          error: {},
+        })
+      }
 
       const facilities = await sequelize.query(
         `

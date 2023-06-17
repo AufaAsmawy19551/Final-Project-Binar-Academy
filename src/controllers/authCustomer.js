@@ -31,6 +31,7 @@ module.exports = {
       const hashPassword = await bcrypt.hash(password, 10);
       const customer = await Customer.create({
         name: name,
+        title_id: 1,
         email: email,
         email_verified: false,
 		    phone: phone, 
@@ -46,11 +47,7 @@ module.exports = {
       return res.status(200).json({
         success: true,
         message: `Success create new ${modelName}!`,
-        data: {
-          name: customer.name,
-          email: customer.email,
-          phone: customer.phone,
-        },
+        data: {}
       });
     } catch (error) {
       next(error);
@@ -60,7 +57,7 @@ module.exports = {
   saveOtp: async (req, res, next) => {
     try {
       const validation = await Validator.validate(req.body, {
-        otp_code: "required|string",
+        otp_code: "required|integer|digits:6",
       });
 
       if (validation.failed) {
@@ -71,7 +68,7 @@ module.exports = {
         });
       }
 
-      const { otp_code } = req.query;
+      const { otp_code } = req.body;
       const email = req.body.email;
 
       const getOtpCodeFromDatabase = async (email) => {
@@ -167,7 +164,8 @@ module.exports = {
         email_verified: customer.email_verified,
       };
 
-      const token = await jwt.sign(payload, JWT_SECRET_KEY);
+      const token = await jwt.sign(payload, JWT_SECRET_KEY)
+      Customer.update({token: token}, {where: {id: customer.id}});
       return res.status(200).json({
         success: true,
         message: "login success!",
@@ -182,18 +180,27 @@ module.exports = {
 
   userDetails: async (req, res, next) => {
 		try {
-			const details = await Customer.findOne({
-          where: { id: req.user.id }, 
-          attributes:[
-            'id',
-            'name',
-            'email',
-            'email_verified',
-            'phone',
-            'createdAt',
-            'updatedAt',
-          ]
-        });
+      const details = await sequelize.query(
+        `
+        SELECT
+          c.id "customer_id",
+          c.title_id "customer_title_id",
+          t.name "customer_title",
+          c.name "customer_name",
+          c.family_name "customer_family_name",
+          c.email "email",
+          c.email_verified "email_verified",
+          c.phone "phone"
+        FROM 
+          "Customers" c
+          LEFT JOIN "Titles" t ON (c.title_id = t.id)
+        WHERE 
+          c.id = ${req.user.id}
+        `,
+        {
+          type: sequelize.QueryTypes.SELECT,
+        },
+      )
 
 			if (!details) {
 				return res.status(404).json({
@@ -262,20 +269,19 @@ module.exports = {
 },
   saveForgotPassword: async (req, res, next) => {
     try {
-      const { new_password, confirm_new_password } = req.body;
+      const { new_password } = req.body;
       const { token } = req.query;
 
-      // const validation = await Validator.validate(req.body, {
-      //   password: "required|string|between:8,255|confirmed",
-      // });
+      const validation = await Validator.validate(req.body, {
+        new_password: "required|string|between:8,255|confirmed",
+      });
 
-      // if (validation.failed) {
-      //   return res.status(400).json({
-      //     success: false,
-      //     message: "Bad Request",
-      //     data: validation.errors,
-      //   });
-      // }
+      if (validation.failed) {
+        return res.render("auth/reset-password", {
+          message: "confirm password does not match!",
+          token,
+        });
+      }
 
       // buat service dan response di sini!
       if (!token) {
@@ -284,12 +290,7 @@ module.exports = {
           token,
         });
       }
-      if (new_password != confirm_new_password) {
-        return res.render("auth/reset-password", {
-          message: "confirm password does not match!",
-          token,
-        });
-      }
+
       const data = await jwt.verify(token, JWT_SECRET_KEY);
 
       const hashPassword = await bcrypt.hash(new_password, 10);
@@ -357,7 +358,7 @@ module.exports = {
         });
       }
 
-      // buat service dan response di sini!
+      Customer.update({token: null}, {where:{id: req.user.id}})
       return res.status(200).json({
         success: true,
         message: "Logout Successful",

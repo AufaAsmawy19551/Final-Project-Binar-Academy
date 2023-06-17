@@ -1,15 +1,11 @@
-const modelName = 'CustomerNotification';
-const { CustomerNotification: Model, Customer, sequelize } = require('../database/models');
+const modelName = 'Title';
+const { Title: Model, sequelize } = require('../database/models');
 const Validator = require('../utils/validatorjs');
 
 module.exports = {
 	index: async (req, res, next) => {
 		try {
-			const validation = await Validator.validate(req.query, {
-				customer_id: 'integer|exist:Customers,id',
-   				notification_id: 'integer|exist:Notifications,id',
-    			is_read: 'integer|boolean',
-			});
+			const validation = await Validator.validate(req.query, {});
 
 			if (validation.failed) {
 				return res.status(400).json({
@@ -18,14 +14,8 @@ module.exports = {
 					data: validation.errors,
 				});
 			}
-			
-			const list = await Model.findAll({
-				where: {customer_id: req.customer.id},
-				include: [{
-					model: Customer,
-					as: 'customernotif',
-				}]
-			});
+
+			const list = await Model.findAll();
 
 			return res.status(200).json({
 				success: true,
@@ -40,7 +30,7 @@ module.exports = {
 	store: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'required|alpha|between:1,255',
+				name: 'required|string|between:1,255',
 			});
 
 			if (validation.failed) {
@@ -65,7 +55,9 @@ module.exports = {
 
 	show: async (req, res, next) => {
 		try {
-			const details = await Model.findOne({ where: { id: req.params.id } });
+			const details = await Model.findOne({
+				where: { id: req.params.id },
+			});
 
 			if (!details) {
 				return res.status(404).json({
@@ -88,7 +80,7 @@ module.exports = {
 	update: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'alpha|between:1,255',
+				name: 'string|between:1,255',
 			});
 
 			if (validation.failed) {

@@ -21,11 +21,11 @@ module.exports = (sequelize, DataTypes) => {
     passenger_title_id: DataTypes.INTEGER,
     passenger_name: DataTypes.STRING,
     passenger_family_name: DataTypes.STRING,
-    passenger_dob: DataTypes.DATE,
+    passenger_dob: DataTypes.DATEONLY,
     passenger_nationality_id: DataTypes.INTEGER,
     passenger_identity_card: DataTypes.STRING,
     passenger_identity_card_publisher_id: DataTypes.INTEGER,
-    passenger_identity_card_due_date: DataTypes.DATE,
+    passenger_identity_card_due_date: DataTypes.DATEONLY,
     passenger_type: DataTypes.STRING,
     boarding_status: DataTypes.BOOLEAN
   }, {

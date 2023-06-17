@@ -55,30 +55,57 @@ module.exports = {
 
 	show: async (req, res, next) => {
 		try {
-			const details = await Model.findOne({ where: { id: req.params.id } });
-
-			if (!details) {
-				return res.status(404).json({
-					success: false,
-					message: `${modelName} with id ${req.params.id} not found!`,
-					error: {},
-				});
-			}
-
-			return res.status(200).json({
-				success: true,
-				message: `Success get details of ${modelName} with id ${req.params.id}!`,
-				data: details,
-			});
-		} catch (error) {
-			next(error);
-		}
+			const details = await sequelize.query(
+			  `
+			  SELECT
+				c.id "customer_id",
+				c.picture "picture",
+				c.title_id "customer_title_id",
+				t.name "customer_title",
+				c.name "customer_name",
+				c.family_name "customer_family_name",
+				c.email "email",
+				c.email_verified "email_verified",
+				c.phone "phone"
+			  FROM 
+				"Customers" c
+				LEFT JOIN "Titles" t ON (c.title_id = t.id)
+			  WHERE 
+				c.id = ${req.user.id}
+			  `,
+			  {
+				type: sequelize.QueryTypes.SELECT,
+			  },
+			)
+	  
+				  if (!details) {
+					  return res.status(404).json({
+						  success: false,
+						  message: `${modelName} with id ${req.user.id} not found!`,
+						  error: {},
+					  });
+				  }
+	  
+				  return res.status(200).json({
+					  success: true,
+					  message: `Success get details of ${modelName} with id ${req.user.id}!`,
+					  data: details,
+				  });
+			  } catch (error) {
+				  next(error);
+			  }
 	},
 
 	update: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.body, {
-				name: 'alpha|between:1,255',
+				title_id: 'integer|exist:Titles,id',
+				name: 'string|between:1,255',
+				family_name: 'string|between:1,255',
+				email: "email|unique:Customers,email",
+        		phone: "integer|digits_between:9,12|unique:Customers,phone",
+        		password: "string|between:8,255|confirmed",
+        		picture: "string",
 			});
 
 			if (validation.failed) {
@@ -89,7 +116,7 @@ module.exports = {
 				});
 			}
 
-			const updated = await Model.update(req.body, { where: { id: req.params.id }, returning: true });
+			const updated = await Model.update(req.body, { where: { id: req.user.id }, returning: true });
 
 			if (!updated[1][0]) {
 				return res.status(404).json({

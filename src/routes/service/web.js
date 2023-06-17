@@ -13,7 +13,8 @@ router.prefix(
 
 		route.prefix('/customer-auth', async (route) => {
 			route.post('/register', authCustomer.register);
-			route.post('/save-otp', authCustomer.saveOtp);
+			route.get('/get-otp', authCustomer.register);
+			// route.post('/save-otp', authCustomer.saveOtp);
 			route.post('/login', authCustomer.login);
 			route.post('/request-forgot-password', authCustomer.requestForgotPassword);
 			route.get('/reset-password', authCustomer.resetPasswordPage)

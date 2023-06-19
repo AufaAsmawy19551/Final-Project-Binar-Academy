@@ -1,174 +1,83 @@
-"use strict";
+'use strict'
+
+const { route } = require('../../utils/routeGrouping')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const now = new Date(); 
-    await queryInterface.bulkInsert(
-			'Flights',
-			[
-				{
-					departure_airport_id: 1,
-					arrival_airport_id: 2,
-					airplane_id: 1,
-					departure_date: new Date(now.getTime() + 1000 * 3600 * 24),
-					arrival_date: new Date(now.getTime() + 1000 * 3600 * 24 * 2),
-					price: 1500000,
-					discount: 10,
-					tax: 5,
-					stock: 12,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-				},
-				{
-					departure_airport_id: 2,
-					arrival_airport_id: 3,
-					airplane_id: 3,
-					departure_date: new Date(now.getTime() + 1000 * 3600 * 24),
-					arrival_date: new Date(now.getTime() + 1000 * 3600 * 24 * 2),
-					price: 1200000,
-					discount: 10,
-					tax: 5,
-					stock: 63,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-				},
-				{
-					departure_airport_id: 3,
-					arrival_airport_id: 4,
-					airplane_id: 4,
-					departure_date: new Date(now.getTime() + 1000 * 3600 * 24),
-					arrival_date: new Date(now.getTime() + 1000 * 3600 * 24 * 2),
-					price: 1000000,
-					discount: 10,
-					tax: 5,
-					stock: 10,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-				},
-				{
-					departure_airport_id: 5,
-					arrival_airport_id: 6,
-					airplane_id: 5,
-					departure_date: new Date(now.getTime() + 1000 * 3600 * 24),
-					arrival_date: new Date(now.getTime() + 1000 * 3600 * 24 * 2),
-					price: 1200000,
-					discount: 10,
-					tax: 5,
-					stock: 10,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-				},
-				{
-					departure_airport_id: 6,
-					arrival_airport_id: 7,
-					airplane_id: 5,
-					departure_date: new Date(now.getTime() + 1000 * 3600 * 24),
-					arrival_date: new Date(now.getTime() + 1000 * 3600 * 24 * 2),
-					price: 1000000,
-					discount: 10,
-					tax: 5,
-					stock: 10,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-				},
-				{
-					departure_airport_id: 7,
-					arrival_airport_id: 8,
-					airplane_id: 6,
-					departure_date: new Date(now.getTime() + 1000 * 3600 * 24),
-					arrival_date: new Date(now.getTime() + 1000 * 3600 * 24 * 2),
-					price: 1000000,
-					discount: 10,
-					tax: 5,
-					stock: 10,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-				},
-				{
-					departure_airport_id: 8,
-					arrival_airport_id: 9,
-					airplane_id: 7,
-					departure_date: new Date(now.getTime() + 1000 * 3600 * 24),
-					arrival_date: new Date(now.getTime() + 1000 * 3600 * 24 * 2),
-					price: 1000000,
-					discount: 10,
-					tax: 5,
-					stock: 10,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-				},
-				{
-					departure_airport_id: 9,
-					arrival_airport_id: 10,
-					airplane_id: 8,
-					departure_date: new Date(now.getTime() + 1000 * 3600 * 24),
-					arrival_date: new Date(now.getTime() + 1000 * 3600 * 24 * 2),
-					price: 1000000,
-					discount: 10,
-					tax: 5,
-					stock: 10,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-				},
-				{
-					departure_airport_id: 10,
-					arrival_airport_id: 11,
-					airplane_id: 9,
-					departure_date: new Date(now.getTime() + 1000 * 3600 * 24),
-					arrival_date: new Date(now.getTime() + 1000 * 3600 * 24 * 2),
-					price: 1000000,
-					discount: 10,
-					tax: 5,
-					stock: 10,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-				},
-				{
-					departure_airport_id: 11,
-					arrival_airport_id: 12,
-					airplane_id: 10,
-					departure_date: new Date(now.getTime() + 1000 * 3600 * 24),
-					arrival_date: new Date(now.getTime() + 1000 * 3600 * 24 * 2),
-					price: 1000000,
-					discount: 10,
-					tax: 5,
-					stock: 10,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-				},
-				{
-					departure_airport_id: 10,
-					arrival_airport_id: 9,
-					airplane_id: 11,
-					departure_date: new Date(now.getTime() + 1000 * 3600 * 24),
-					arrival_date: new Date(now.getTime() + 1000 * 3600 * 24 * 2),
-					price: 1000000,
-					discount: 10,
-					tax: 5,
-					stock: 10,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-				},
-				{
-					departure_airport_id: 5,
-					arrival_airport_id: 8,
-					airplane_id: 12,
-					departure_date: new Date(now.getTime() + 1000 * 3600 * 24),
-					arrival_date: new Date(now.getTime() + 1000 * 3600 * 24 * 2),
-					price: 1000000,
-					discount: 10,
-					tax: 5,
-					stock: 10,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-				},
-			],
-			{}
-		);
+    const {routes} = require('./data/routeData.js')
+    const date = '2023-06-15T06:00:00.000Z';
+
+    for (let day = 0; day < 90; day++) {
+      const flights = []
+      for (let route_idx = 0; route_idx < routes.length; route_idx++) {
+        const route = routes[route_idx]
+        const departureDate = new Date(date)
+        const arrivalDate = new Date(date)
+        departureDate.setMilliseconds(1000 * 3600 * 24 * day)
+        arrivalDate.setMilliseconds(route.duration + 1000 * 3600 * 24 * day)
+        for (let airplane_id = 1; airplane_id <= 30; airplane_id++) {
+          flights.push({
+            departure_airport_id: route.departure_airport_id,
+            arrival_airport_id: route.arrival_airport_id,
+            airplane_id: airplane_id,
+            departure_date: new Date(departureDate),
+            arrival_date: new Date(arrivalDate),
+            price:
+              (route.duration / 3600000) *
+              (500000 + Math.floor(Math.pow(airplane_id / 6 + 1, 2)) * 10000) *
+              Math.pow(airplane_id % 3 || 3, 2),
+            discount: airplane_id % 6 < 3 ? Math.floor(airplane_id / 6) * 5 : 0,
+            tax: 5,
+            stock: 72,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          })
+          if(airplane_id % 3 == 1){
+            departureDate.setMilliseconds(1000 * 60 * 30)
+            arrivalDate.setMilliseconds(1000 * 60 * 30)
+          }
+        }
+      }
+      await queryInterface.bulkInsert('Flights', flights, {})
+    }
+
+    for (let day = 0; day < 90; day++) {
+      const flights = []
+      for (let route_idx = 0; route_idx < routes.length; route_idx++) {
+        const route = routes[route_idx]
+        const departureDate = new Date(date)
+        const arrivalDate = new Date(date)
+        departureDate.setMilliseconds(1000 * 3600 * 24 * day)
+        arrivalDate.setMilliseconds(route.duration + 1000 * 3600 * 24 * day)
+        for (let airplane_id = 1; airplane_id <= 30; airplane_id++) {
+          flights.push({
+            departure_airport_id: route.arrival_airport_id,
+            arrival_airport_id: route.departure_airport_id,
+            airplane_id: airplane_id,
+            departure_date: new Date(departureDate),
+            arrival_date: new Date(arrivalDate),
+            price:
+              (route.duration / 3600000) *
+              (500000 + Math.floor(Math.pow(airplane_id / 6 + 1, 2)) * 10000) *
+              Math.pow(airplane_id % 3 || 3, 2),
+            discount: airplane_id % 6 < 3 ? Math.floor(airplane_id / 6) * 5 : 0,
+            tax: 5,
+            stock: 72,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          })
+          if(airplane_id % 3 == 1){
+            departureDate.setMilliseconds(1000 * 60 * 30)
+            arrivalDate.setMilliseconds(1000 * 60 * 30)
+          }
+        }
+      }
+      await queryInterface.bulkInsert('Flights', flights, {})
+    }
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Flights", null, {});
+    await queryInterface.bulkDelete('Flights', null, {})
   },
-};
+}

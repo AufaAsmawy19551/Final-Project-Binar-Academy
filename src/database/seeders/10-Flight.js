@@ -7,8 +7,10 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const {routes} = require('./data/routeData.js')
     const date = '2023-06-15T06:00:00.000Z';
+    const numberDays= 180;
+    const numberAirplanes= 30;
 
-    for (let day = 0; day < 90; day++) {
+    for (let day = 0; day < numberDays; day++) {
       const flights = []
       for (let route_idx = 0; route_idx < routes.length; route_idx++) {
         const route = routes[route_idx]
@@ -16,7 +18,7 @@ module.exports = {
         const arrivalDate = new Date(date)
         departureDate.setMilliseconds(1000 * 3600 * 24 * day)
         arrivalDate.setMilliseconds(route.duration + 1000 * 3600 * 24 * day)
-        for (let airplane_id = 1; airplane_id <= 30; airplane_id++) {
+        for (let airplane_id = 1; airplane_id <= numberAirplanes; airplane_id++) {
           flights.push({
             departure_airport_id: route.departure_airport_id,
             arrival_airport_id: route.arrival_airport_id,
@@ -42,7 +44,7 @@ module.exports = {
       await queryInterface.bulkInsert('Flights', flights, {})
     }
 
-    for (let day = 0; day < 90; day++) {
+    for (let day = 0; day < numberDays; day++) {
       const flights = []
       for (let route_idx = 0; route_idx < routes.length; route_idx++) {
         const route = routes[route_idx]
@@ -50,7 +52,7 @@ module.exports = {
         const arrivalDate = new Date(date)
         departureDate.setMilliseconds(1000 * 3600 * 24 * day)
         arrivalDate.setMilliseconds(route.duration + 1000 * 3600 * 24 * day)
-        for (let airplane_id = 1; airplane_id <= 30; airplane_id++) {
+        for (let airplane_id = 1; airplane_id <= numberAirplanes; airplane_id++) {
           flights.push({
             departure_airport_id: route.arrival_airport_id,
             arrival_airport_id: route.departure_airport_id,

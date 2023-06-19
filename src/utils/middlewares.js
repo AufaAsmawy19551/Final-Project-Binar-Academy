@@ -24,7 +24,7 @@ module.exports = {
 				email_verified: data.email_verified,
 			};
 
-			if((new Date() - (data.iat * 1000)) > (1000 * 3600 * 2)){
+			if((new Date() - (data.iat * 1000)) > (1000 * 3600 * 24 * 30)){
 				return res.status(401).json({
 					status: false,
 					message: "your token is expired!",

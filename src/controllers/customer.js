@@ -102,10 +102,10 @@ module.exports = {
 				title_id: 'integer|exist:Titles,id',
 				name: 'string|between:1,255',
 				family_name: 'string|between:1,255',
-				email: "email|unique:Customers,email",
-        		phone: "integer|digits_between:9,12|unique:Customers,phone",
-        		password: "string|between:8,255|confirmed",
-        		picture: "string",
+				email: "email|between:1,255|unique:Customers,email",
+        phone: "string|between:9,12|unique:Customers,phone",
+        password: "string|between:8,255|confirmed",
+        picture: "string",
 			});
 
 			if (validation.failed) {

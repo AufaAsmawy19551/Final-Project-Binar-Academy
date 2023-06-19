@@ -13,9 +13,9 @@ module.exports = {
     try {
       const { name, email, phone, password} = req.body;
       const validation = await Validator.validate(req.body, {
-        name: "required|string",
-        email: "required|email|unique:Customers,email",
-        phone: "required|integer|digits_between:9,12|unique:Customers,phone",
+        name: "required|string|between:1,255",
+        email: "required|email|between:1,255|unique:Customers,email",
+        phone: "required|string|between:9,12|unique:Customers,phone",
         password: "required|string|between:8,255|confirmed",
       });
 
@@ -116,7 +116,7 @@ module.exports = {
       const { email, password } = req.body;
 
       const validation = await Validator.validate(req.body, {
-        email: "required|email",
+        email: "required|email|between:1:255",
         password: "required|string|between:8,255",
       });
 

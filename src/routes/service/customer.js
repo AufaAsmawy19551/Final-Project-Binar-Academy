@@ -1,12 +1,15 @@
 router = require('../../utils/routeGrouping');
 
 const middlewares = require('../../utils/middlewares');
+const storage = require('../../utils/storage');
 const notification = require('../../controllers/notification');
 const transaction = require('../../controllers/transaction');
 const authCustomer = require('../../controllers/authCustomer');
 const customer = require('../../controllers/customer');
 const country = require('../../controllers/country');
 const title = require('../../controllers/title');
+const media = require('../../controllers/media');
+const multer = require('multer')();
 
 router.prefix(
 	'/customer',
@@ -35,8 +38,9 @@ router.prefix(
 		});
 
 		route.prefix('/users', async (route) => {		
-			route.get('/', authCustomer.userDetails);
-			route.put('/', customer.update);			
+			route.get('/', customer.show);
+			route.put('/', customer.update);
+			route.post('/images', storage.image.single('media'), media.storageSingle);		
 		});
 
 		route.prefix('/customer-auth', async (route) => {

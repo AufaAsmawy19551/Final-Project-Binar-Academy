@@ -8,6 +8,7 @@ module.exports = {
 			'Customers',
 			[
 				{
+					picture: 'http://localhost:3000/images/profile1.jpeg',
 					title_id: 1,
 					name: 'Aufa',
 					family_name: null,
@@ -20,6 +21,7 @@ module.exports = {
 					updatedAt: new Date(),
 				},
 				{
+					picture: 'http://localhost:3000/images/profile2.jpeg',
 					title_id: 1,
 					name: 'Rizqi',
 					family_name: null,
@@ -32,6 +34,7 @@ module.exports = {
 					updatedAt: new Date(),
 				},
 				{
+					picture: 'http://localhost:3000/images/profile3.jpg',
 					title_id: 1,
 					name: 'Yasir',
 					family_name: null,
@@ -44,6 +47,7 @@ module.exports = {
 					updatedAt: new Date(),
 				},
 				{
+					picture: 'http://localhost:3000/images/profile1.jpeg',
 					title_id: 1,
 					name: 'Ukasah',
 					family_name: null,
@@ -56,6 +60,7 @@ module.exports = {
 					updatedAt: new Date(),
 				},
 				{
+					picture: 'http://localhost:3000/images/profile1.jpeg',
 					title_id: 1,
 					name: 'Beni',
 					family_name: null,

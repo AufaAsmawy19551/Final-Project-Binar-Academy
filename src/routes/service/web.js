@@ -6,6 +6,7 @@ const flight = require('../../controllers/flight');
 const kelas = require('../../controllers/class');
 const facility = require('../../controllers/facility');
 const airport = require('../../controllers/airport');
+const banner = require('../../controllers/banner');
 
 router.prefix(
 	'/web',
@@ -22,6 +23,11 @@ router.prefix(
 			route.get('/oauth', authCustomer.googleOauth2)
 		});
 	
+		route.prefix('/banners', async (route) => {
+			route.get('/', banner.index);
+			route.get('/:id', banner.show);
+		});
+
 		route.prefix('/flights', async (route) => {
 			route.get('/', flight.index);
 			route.get('/:id', flight.show);

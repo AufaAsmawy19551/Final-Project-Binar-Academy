@@ -116,7 +116,7 @@ module.exports = {
       const { email, password } = req.body;
 
       const validation = await Validator.validate(req.body, {
-        email: "required|email|between:1:255",
+        email: "required|email|between:1,255",
         password: "required|string|between:8,255",
       });
 

@@ -55,12 +55,12 @@ module.exports = {
 				f.stock
 			FROM 
 				"Flights" f
-				LEFT JOIN "Airports" dpA ON (f.departure_airport_id = dpA.id)
-				LEFT JOIN "Airports" arA ON (f.arrival_airport_id = arA.id)
-				LEFT JOIN "Airplanes" a ON (f.airplane_id = a.id)
-				LEFT JOIN "Classes" c ON (a.class_id = c.id)
-				LEFT JOIN "Cities" dpC ON (dpA.city_id = dpC.id)
-				LEFT JOIN "Cities" arC ON (arA.city_id = arC.id)
+				INNER JOIN "Airports" dpA ON (f.departure_airport_id = dpA.id)
+				INNER JOIN "Airports" arA ON (f.arrival_airport_id = arA.id)
+				INNER JOIN "Airplanes" a ON (f.airplane_id = a.id)
+				INNER JOIN "Classes" c ON (a.class_id = c.id)
+				INNER JOIN "Cities" dpC ON (dpA.city_id = dpC.id)
+				INNER JOIN "Cities" arC ON (arA.city_id = arC.id)
       WHERE
        dpA.id = ${req.query.departure_airport_id} AND
        arA.id = ${req.query.destination_airport_id} AND

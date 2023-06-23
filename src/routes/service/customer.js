@@ -24,7 +24,7 @@ router.prefix(
 		route.prefix('/transactions', async (route) => {
 			route.get('/', transaction.index);
 			route.post('/', transaction.store);
-			route.put('/pay/:id', transaction.update);
+			route.put('/pay', transaction.update);
 			route.get('/:id', transaction.show);
 		});
 

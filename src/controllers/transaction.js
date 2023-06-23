@@ -260,26 +260,11 @@ module.exports = {
 
   update: async (req, res, next) => {
     try {
-      const validation = await Validator.validate(req.body, {
-        customer_id: 'integer|exist:Customers,id',
-        date: 'date',
-        payment_date: 'date',
-        payment_due_date: 'date',
-        status: 'string|min:0|max:50',
-      })
 
-      if (validation.failed) {
-        return res.status(400).json({
-          success: false,
-          message: 'Bad Request',
-          data: validation.errors,
-        })
-      }
+      const user = req.user.id;
 
-      const updated = await Model.update(req.body, {
-        where: { id: req.params.id },
-        returning: true,
-      })
+			const updated = await Model.update({payment_date: Date.now(), status: "paid"}, 
+        {where: {customer_id: user}, returning: true });
 
       if (!updated[1][0]) {
         return res.status(404).json({

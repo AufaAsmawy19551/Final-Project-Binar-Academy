@@ -261,11 +261,11 @@ module.exports = {
   update: async (req, res, next) => {
     try {
       const validation = await Validator.validate(req.body, {
-        customer_id: 'required|integer|exist:Customers,id',
-        date: 'required|date',
-        payment_date: 'required|date',
-        payment_due_date: 'required|date',
-        status: 'string|min:0|max:255',
+        customer_id: 'integer|exist:Customers,id',
+        date: 'date',
+        payment_date: 'date',
+        payment_due_date: 'date',
+        status: 'string|min:0|max:50',
       })
 
       if (validation.failed) {

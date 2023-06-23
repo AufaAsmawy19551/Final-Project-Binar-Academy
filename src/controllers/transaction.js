@@ -260,16 +260,43 @@ module.exports = {
 
   update: async (req, res, next) => {
     try {
+      const validation = await Validator.validate(req.params, {
+        id: 'exist:Transactions,id',
+      })
 
-      const user = req.user.id;
+      if (validation.failed) {
+        return res.status(400).json({
+          success: false,
+          message: 'Bad Request',
+          data: validation.errors,
+        })
+      }
 
-			const updated = await Model.update({payment_date: Date.now(), status: "paid"}, 
-        {where: {customer_id: user}, returning: true });
+      let updated = await Model.findOne({where: {id: req.params.id, customer_id: req.user.id}, returning: true });
+
+      if (!updated) {
+        return res.status(404).json({
+          success: false,
+          message: `${modelName} with id ${req.params.id} and customer_id ${req.user.id} not found!`,
+          error: {},
+        })
+      }
+      
+      if (updated.status != "unpaid") {
+        return res.status(404).json({
+          success: false,
+          message: `${modelName} with id ${req.params.id} and customer_id ${req.user.id} is ${updated.status}!`,
+          error: {},
+        })
+      }
+
+			updated = await Model.update({payment_date: Date.now(), status: "paid"}, 
+        {where: {id: req.params.id, customer_id: req.user.id}, returning: true });
 
       if (!updated[1][0]) {
         return res.status(404).json({
           success: false,
-          message: `${modelName} with id ${req.params.id} not found!`,
+          message: `${modelName} with id ${req.params.id} and customer_id ${req.user.id} not found!`,
           error: {},
         })
       }

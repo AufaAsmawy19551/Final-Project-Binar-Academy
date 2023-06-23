@@ -62,11 +62,13 @@ module.exports = {
 				INNER JOIN "Cities" dpC ON (dpA.city_id = dpC.id)
 				INNER JOIN "Cities" arC ON (arA.city_id = arC.id)
       WHERE
-       dpA.id = ${req.query.departure_airport_id} AND
-       arA.id = ${req.query.destination_airport_id} AND
-       c.id = ${req.query.class_id} AND
-       f.stock >= ${req.query.number_passenger} AND
-       f.departure_date::varchar(255) LIKE '${req.query.departure_date}%'
+        dpA.id = ${req.query.departure_airport_id} 
+        AND arA.id = ${req.query.destination_airport_id}
+        AND c.id = ${req.query.class_id}
+        AND f.stock >= ${req.query.number_passenger}
+        AND f.departure_date::varchar(255) LIKE '${req.query.departure_date}%'
+      ORDER BY 
+        f.departure_date
 			`, 
         {
           type: sequelize.QueryTypes.SELECT,

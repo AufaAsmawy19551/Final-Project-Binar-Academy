@@ -260,12 +260,8 @@ module.exports = {
 
   update: async (req, res, next) => {
     try {
-      const validation = await Validator.validate(req.body, {
-        customer_id: 'required|integer|exist:Customers,id',
-        date: 'required|date',
-        payment_date: 'required|date',
-        payment_due_date: 'required|date',
-        status: 'string|min:0|max:255',
+      const validation = await Validator.validate(req.params, {
+        id: 'exist:Transactions,id',
       })
 
       if (validation.failed) {
@@ -276,15 +272,31 @@ module.exports = {
         })
       }
 
-      const updated = await Model.update(req.body, {
-        where: { id: req.params.id },
-        returning: true,
-      })
+      let updated = await Model.findOne({where: {id: req.params.id, customer_id: req.user.id}, returning: true });
+
+      if (!updated) {
+        return res.status(404).json({
+          success: false,
+          message: `${modelName} with id ${req.params.id} and customer_id ${req.user.id} not found!`,
+          error: {},
+        })
+      }
+      
+      if (updated.status != "unpaid") {
+        return res.status(404).json({
+          success: false,
+          message: `${modelName} with id ${req.params.id} and customer_id ${req.user.id} is ${updated.status}!`,
+          error: {},
+        })
+      }
+
+			updated = await Model.update({payment_date: Date.now(), status: "paid"}, 
+        {where: {id: req.params.id, customer_id: req.user.id}, returning: true });
 
       if (!updated[1][0]) {
         return res.status(404).json({
           success: false,
-          message: `${modelName} with id ${req.params.id} not found!`,
+          message: `${modelName} with id ${req.params.id} and customer_id ${req.user.id} not found!`,
           error: {},
         })
       }

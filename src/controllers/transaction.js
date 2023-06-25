@@ -72,8 +72,10 @@ module.exports = {
 
       Customer.update({title_id: req.body.customer_identity.title_id, family_name: req.body.customer_identity.family_name}, {where: {id: req.user.id}})
 
+      const passengers = []
+      
       req.body.passenger_identity.forEach(async (passenger) => {
-        await TransactionDetail.create({
+        passengers.push({
           transaction_id: transaction.id,
           flight_id: passenger.flight_id,
           seat_id: passenger.seat_id,
@@ -90,6 +92,8 @@ module.exports = {
           boarding_status: false,
         })
       })
+
+      await TransactionDetail.bulkCreate(passengers);
 
       return res.status(200).json({
         success: true,

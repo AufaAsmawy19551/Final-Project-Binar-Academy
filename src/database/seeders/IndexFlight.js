@@ -12,6 +12,8 @@ module.exports = {
     await queryInterface.addIndex('Flights', ['discount'], { name: 'flights_discount_idx' });
     await queryInterface.addIndex('Flights', ['stock'], { name: 'flights_stock_idx' });
     await queryInterface.addIndex('Flights', ['departure_date'], { name: 'flights_departure_date_idx' });
+    await queryInterface.addIndex('TransactionDetails', ['seat_id'], { name: 'transaction_details_seat_id_idx' });
+    await queryInterface.addIndex('TransactionDetails', ['id'], { name: 'transaction_details_id_idx' });
   },
 
   async down (queryInterface, Sequelize) {
@@ -24,5 +26,7 @@ module.exports = {
     await queryInterface.removeIndex('Flights', 'flights_discount_idx');
     await queryInterface.removeIndex('Flights', 'flights_stock_idx');
     await queryInterface.removeIndex('Flights', 'flights_departure_date_idx');
+    await queryInterface.removeIndex('Flights', 'transaction_details_seat_id_idx');
+    await queryInterface.removeIndex('TransactionDetails', 'transaction_details_id_idx');
   }
 }

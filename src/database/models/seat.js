@@ -13,11 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
 
       // relasi many-to-one -> airplane
-      Seat.belongsTo(models.Airplane, {foreignKey: 'id', as: 'airplane'});
+      // Seat.belongsTo(models.Airplane, {foreignKey: 'id', as: 'airplane'});
     }
   }
   Seat.init({
-    airplane_id: DataTypes.INTEGER,
     number: DataTypes.STRING
   }, {
     sequelize,

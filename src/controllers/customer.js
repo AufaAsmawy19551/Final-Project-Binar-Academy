@@ -103,7 +103,7 @@ module.exports = {
 				name: 'string|between:1,255',
 				family_name: 'string|between:1,255',
 				email: "email|between:1,255|unique:Customers,email",
-        phone: "string|between:9,12|unique:Customers,phone",
+        phone: "numeric|digits_between:9,12|unique:Customers,phone",
         password: "string|between:8,255|confirmed",
         picture: "string",
 			});

@@ -48,7 +48,7 @@ module.exports = {
         'passenger_identity.*.passenger_family_name': 'string|between:1,255',
         'passenger_identity.*.passenger_dob': 'required|date',
         'passenger_identity.*.passenger_nationality_id': 'required|integer|exist:Countries,id',
-        'passenger_identity.*.passenger_identity_card': 'required|string|size:16',
+        'passenger_identity.*.passenger_identity_card': 'required|numeric|digits:16',
         'passenger_identity.*.passenger_identity_card_publisher_id': 'required|integer|exist:Countries,id',
         'passenger_identity.*.passenger_identity_card_due_date': 'date',
         'passenger_identity.*.passenger_type': 'string|between:1,10',

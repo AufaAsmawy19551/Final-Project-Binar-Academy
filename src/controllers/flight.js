@@ -76,7 +76,7 @@ module.exports = {
           AND f.departure_date::varchar(255) LIKE '${req.query.departure_date}%'
         ORDER BY 
           f.departure_date
-			`,
+			  `,
         {
           type: sequelize.QueryTypes.SELECT,
         },
@@ -170,7 +170,7 @@ module.exports = {
 			  	LEFT JOIN "Cities" arC ON (arA.city_id = arC.id)
         WHERE 
           f.id = ${req.params.id}
-			`,
+			  `,
         {
           type: sequelize.QueryTypes.SELECT,
         },
@@ -178,13 +178,13 @@ module.exports = {
 
       const facilities = await sequelize.query(
         `
-      SELECT
-        f.name "facility_name"
-      FROM 
-        "AirplaneFacilities" af LEFT JOIN "Facilities" f ON(af.facility_id = f.id)
-      WHERE
-      af.airplane_id = ${details[0].airplane_id}
-      `,
+        SELECT
+          f.name "facility_name"
+        FROM 
+          "AirplaneFacilities" af LEFT JOIN "Facilities" f ON(af.facility_id = f.id)
+        WHERE
+          af.airplane_id = ${details[0].airplane_id}
+        `,
         {
           type: sequelize.QueryTypes.SELECT,
         },
@@ -203,7 +203,7 @@ module.exports = {
           td.flight_id = ${details[0].id} OR td.flight_id IS NULL
         ORDER BY
           s.id
-      `,
+        `,
         {
           type: sequelize.QueryTypes.SELECT,
         },

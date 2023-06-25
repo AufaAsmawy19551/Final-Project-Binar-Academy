@@ -15,7 +15,7 @@ module.exports = {
       const validation = await Validator.validate(req.body, {
         name: "required|string|between:1,255",
         email: "required|email|between:1,255|unique:Customers,email",
-        phone: "required|string|between:9,12|unique:Customers,phone",
+        phone: "required|numeric|digits_between:9,12|unique:Customers,phone",
         password: "required|string|between:8,255|confirmed",
       });
 
@@ -67,7 +67,7 @@ module.exports = {
       const email = req.body.email;
 
       const validation = await Validator.validate(req.body, {
-        otp_code: "required|integer|digits:6",
+        otp_code: "required|numeric|digits:6",
       });
 
       if (validation.failed) {

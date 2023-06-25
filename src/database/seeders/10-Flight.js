@@ -7,7 +7,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     const {routes} = require('./data/routeData.js')
     const date = '2023-06-15T06:00:00.000Z';
-    const numberDays= 180;
+    const numberDays= 90;
     const numberAirplanes= 30;
 
     for (let day = 0; day < numberDays; day++) {

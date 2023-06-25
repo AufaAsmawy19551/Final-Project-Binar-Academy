@@ -9,15 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      airplane_id: {
-        type: Sequelize.INTEGER,
-        references: {
-					model: 'Airplanes',
-					key: 'id',
-				},
-				onUpdate: 'CASCADE',
-				onDelete: 'CASCADE',
-      },
       number: {
         type: Sequelize.STRING
       },

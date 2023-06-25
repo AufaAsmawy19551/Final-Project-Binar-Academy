@@ -22,7 +22,7 @@ module.exports = {
 					updatedAt: new Date(),
         },
         {
-          name: 'Free Launch',
+          name: 'Free Lunch',
           createdAt: new Date(),
 					updatedAt: new Date(),
         },

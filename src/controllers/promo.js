@@ -19,9 +19,11 @@ module.exports = {
         `
 			  SELECT 
           f.id,
+          dpA.id        "departure_airport_id",
           dpC.name      "departure_city",
           dpC.time_zone "departure_city_time_zone",
           f.departure_date,
+          arA.id        "arrival_airport_id",
           arC.name      "arrival_city",
           arC.time_zone "arrival_city_time_zone",
           arC.image     "arrival_city_image",
@@ -29,6 +31,7 @@ module.exports = {
           a.name        "airplane_name",
           a.logo        "airplane_logo",
           a.code        "airplane_code",
+          c.id          "airplane_class_id",
           c.name        "airplane_class",
           f.price,
           f.discount,

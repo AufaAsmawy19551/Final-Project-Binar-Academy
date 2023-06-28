@@ -37,9 +37,10 @@ module.exports = {
         password: hashPassword,
       });
      
-        const payload = {
-          id: customer.id
-        }
+      const payload = {
+        id: customer.id
+      }
+      
       const token = await jwt.sign(payload, JWT_SECRET_KEY);
       const url = `${req.protocol}://${req.get('host')}/api/web/customer-auth/get-otp?token=${token}`
 

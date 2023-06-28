@@ -29,7 +29,7 @@ module.exports = {
               (route.duration / 3600000) *
               (500000 + Math.floor(Math.pow(airplane_id / 6 + 1, 2)) * 10000) *
               Math.pow(airplane_id % 3 || 3, 2),
-            discount: airplane_id % 6 < 3 ? Math.floor(airplane_id / 6) * 5 : 0,
+            discount: airplane_id % 6 < 3 ? Math.floor(airplane_id / 6) * 5 * 2 : 0,
             tax: 5,
             stock: 72,
             createdAt: new Date(),
@@ -63,7 +63,7 @@ module.exports = {
               (route.duration / 3600000) *
               (500000 + Math.floor(Math.pow(airplane_id / 6 + 1, 2)) * 10000) *
               Math.pow(airplane_id % 3 || 3, 2),
-            discount: airplane_id % 6 < 3 ? Math.floor(airplane_id / 6) * 5 : 0,
+            discount: airplane_id % 6 < 3 ? Math.floor(airplane_id / 6) * 5 * 2 : 0,
             tax: 5,
             stock: 72,
             createdAt: new Date(),

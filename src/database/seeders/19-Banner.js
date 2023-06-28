@@ -4,11 +4,11 @@ const path = require('path');
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		const banner1 = "1.svg";
-		const banner2 = "2.svg";
-		const banner3 = "3.svg";
-		const banner4 = "4.svg";
-		const banner5 = "5.svg";
+		const banner1 = "1.webp";
+		const banner2 = "2.webp";
+		const banner3 = "3.webp";
+		const banner4 = "4.webp";
+		const banner5 = "5.webp";
 		
 		await queryInterface.bulkInsert(
 			'Banners',

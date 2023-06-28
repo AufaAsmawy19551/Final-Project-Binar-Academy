@@ -3,7 +3,6 @@ const { Customer, sequelize } = require("../database/models");
 const Validator = require("../utils/validatorjs");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { generateOTP, sendOTP } = require("../utils/otp");
 const nodemailer = require("../utils/nodemailer");
 const oauth2 = require("../utils/oauth2");
 const { JWT_SECRET_KEY } = process.env;
@@ -26,7 +25,12 @@ module.exports = {
           data: validation.errors,
         });
       }
+      const generateOTP = `${Math.floor(100000 + Math.random() * 999999)}`;
+      const saltRound = 10
+      const otpCode = await bcrypt.hash(generateOTP, saltRound)
+
       // buat service dan response di sini!
+
       const hashPassword = await bcrypt.hash(password, 10);
       const customer = await Customer.create({
         name: name,
@@ -35,20 +39,15 @@ module.exports = {
         email_verified: false,
         phone: phone,
         password: hashPassword,
+        otp_code: otpCode
       });
-     
-        const payload = {
-          id: customer.id
-        }
-      const token = await jwt.sign(payload, JWT_SECRET_KEY);
-      const url = `${req.protocol}://${req.get('host')}/api/web/customer-auth/get-otp?token=${token}`
-
-      const otp = Math.floor(100000 + Math.random() * 999999);
+     console.log(customer)
+      
       const html = await nodemailer.getHtml('otp.ejs', {
         name: customer.name,
-        url,
-        otp
+        generateOTP
       })
+
       nodemailer.sendMail(customer.email, "send OTP", html)
       
       return res.status(200).json({
@@ -79,9 +78,15 @@ module.exports = {
       }
 
       const customer = await Customer.findOne({ where: { email } });
-
-      const savedOtpCode = await customer;
-      if (otp_code !== savedOtpCode) {
+      if (!customer) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid email",
+          data: null,
+        });
+      }
+      const otpCorrect = await bcrypt.compare(otp_code, customer.otp_code);
+      if (!otpCorrect) {
         return res.status(400).json({
           success: false,
           message: "Invalid OTP code",
@@ -89,21 +94,10 @@ module.exports = {
         });
       }
 
-      const html = await nodemailer.getHtml("otp.ejs", {
-        name: customer.name,
-        url,
-      });
-      nodemailer.sendMail(customer.email, "kode otp", html);
-
-      // Refresh OTP ke email
-      const newOTP = generateOTP();
-      await sendOTP(email, newOTP);
-      await saveOtpCodeToDatabase(email, newOTP);
-
       // buat service dan response di sini!
       return res.status(200).json({
         success: true,
-        message: "OTP code is valid",
+        message: "Success OTP code is valid",
         data: null,
       });
     } catch (error) {
@@ -139,7 +133,7 @@ module.exports = {
         });
       }
 
-      if (customer.user_type == "google" && !user.password) {
+      if (customer.user_type == "google" && !customer.password) {
         return res.status(400).json({
           status: false,
           message:

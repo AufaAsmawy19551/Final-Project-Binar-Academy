@@ -6,8 +6,8 @@ module.exports = {
 	index: async (req, res, next) => {
 		try {
 			const validation = await Validator.validate(req.query, {
-                picture: 'string',
-              })
+        picture: 'string',
+      })
 
 			if (validation.failed) {
 				return res.status(400).json({
@@ -17,7 +17,20 @@ module.exports = {
 				});
 			}
 
-			const list = await Model.findAll();
+			const baseURL = `${req.protocol}://${req.get('host')}`
+
+			const list = await sequelize.query(
+				`
+				SELECT
+				  b.id,
+					CONCAT('${baseURL}/images/banner/', '', b.picture) as "picture"
+				FROM 
+				  "Banners" b
+				`,
+				{
+				  type: sequelize.QueryTypes.SELECT,
+				},
+			);  
 
 			return res.status(200).json({
 				success: true,

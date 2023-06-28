@@ -3,11 +3,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		const banner1 = "https://drive.google.com/file/d/12Opc3GD8PlFDC_KBUlMUz5yyIV8lgx4p/view"
-		const banner2 ="https://drive.google.com/file/d/1N6qR2tlngJcl5A7X32vUtOq7jfJJpo8b/view"
-		const banner3 ="https://drive.google.com/file/d/1ejw12rLUAKtoQHAS6blEvLZu8JsEN7hO/view"
-		const banner4 ="https://drive.google.com/file/d/1wqTHai3WYuNJMmcMWw6rDr3J9A7R13VE/view"
-		const banner5 ="https://drive.google.com/file/d/1DS2Bpg-WO-O6sYk0hG8HZxwPMleCI_L0/view"
+		const banner1 = "http://localhost:3000/images/banner/1.svg";
+		const banner2 = "http://localhost:3000/images/banner/2.svg";
+		const banner3 = "http://localhost:3000/images/banner/3.svg";
+		const banner4 = "http://localhost:3000/images/banner/4.svg";
+		const banner5 = "http://localhost:3000/images/banner/5.svg";
+		
 		await queryInterface.bulkInsert(
 			'Banners',
 			[

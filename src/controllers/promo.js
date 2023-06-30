@@ -15,6 +15,8 @@ module.exports = {
         })
       }
 
+      const now = new Date();
+
       const list = await sequelize.query(
         `
 			  SELECT 
@@ -50,7 +52,7 @@ module.exports = {
             WHERE
               flight_id = f.id
           ) "stock"
-        FROM 
+        FROM
           "Flights" f
           INNER JOIN "Airports" dpA ON (f.departure_airport_id = dpA.id)
           INNER JOIN "Airports" arA ON (f.arrival_airport_id = arA.id)
@@ -58,25 +60,23 @@ module.exports = {
           INNER JOIN "Classes" c ON (a.class_id = c.id)
           INNER JOIN "Cities" dpC ON (dpA.city_id = dpC.id)
           INNER JOIN "Cities" arC ON (arA.city_id = arC.id)
-        WHERE 
+        WHERE
           dpA.id = 1
-          AND arA.id IN (3, 6, 8, 10, 11, 13, 14, 16, 18, 20)
-          AND f.id % 9 = 1
+          AND arA.id IN (4, 6, 8, 10, 11, 13, 14, 16, 18, 20)
+          AND f.discount = ((arA.id * 9) % 5) * 10 + 10
+          AND c.id = 1
           AND f.stock - (
-            SELECT 
+            SELECT
               COUNT(id)
             FROM
               "TransactionDetails"
             WHERE
               flight_id = f.id
           ) >= 1
-          AND f.discount > 0
-          AND f.departure_date::date = '2023-07-05'
-        ORDER 
-          BY f.departure_date
-        LIMIT 
-          10
-			`,
+          AND f.departure_date::DATE = '${new Date(now.getTime() + ((7 - now.getDay()) * 1000 * 60 * 60 * 24)).toISOString().split('T')[0]}'
+        ORDER BY
+          f.discount DESC;
+			  `,
         {
           type: sequelize.QueryTypes.SELECT,
         },

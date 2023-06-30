@@ -69,7 +69,7 @@ module.exports = {
               WHERE
                 flight_id = f.id
             ) "stock"
-          FROM 
+          FROM
             "Flights" f
             INNER JOIN "Airports" dpA ON (f.departure_airport_id = dpA.id)
             INNER JOIN "Airports" arA ON (f.arrival_airport_id = arA.id)
@@ -77,23 +77,22 @@ module.exports = {
             INNER JOIN "Classes" c ON (a.class_id = c.id)
             INNER JOIN "Cities" dpC ON (dpA.city_id = dpC.id)
             INNER JOIN "Cities" arC ON (arA.city_id = arC.id)
-          WHERE 
-            dpA.id = 1
+          WHERE
+            dpA.id = ${req.query.departure_airport_id} 
             AND arA.id = ${req.query.destination_airport_id}
-            AND f.id % 24 < 3
+            AND f.discount = ((arA.id * 9) % 5) * 10 + 10
             AND f.stock - (
-              SELECT 
+              SELECT
                 COUNT(id)
               FROM
                 "TransactionDetails"
               WHERE
                 flight_id = f.id
-            ) >= ${req.query.number_passenger}
-            AND f.discount > 0
-            AND f.departure_date::date = '${req.query.departure_date}%'
-          ORDER 
-            BY f.departure_date
-			  `,
+            ) >= 1
+            AND f.departure_date::DATE = '${req.query.departure_date}'
+          ORDER BY
+            f.departure_date
+			    `,
           {
             type: sequelize.QueryTypes.SELECT,
           },
@@ -150,7 +149,7 @@ module.exports = {
               WHERE
                 flight_id = f.id
             ) >= ${req.query.number_passenger}
-            AND f.departure_date::varchar(255) LIKE '${req.query.departure_date}%'
+            AND f.departure_date::date = '${req.query.departure_date}'
           ORDER BY 
             f.departure_date
 			    `,

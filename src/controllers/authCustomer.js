@@ -258,47 +258,65 @@ module.exports = {
   },
   resetPasswordPage: (req, res) => {
     const { token } = req.query;
-    return res.render("auth/reset-password", { message: null, token });
+    // return res.redirect(`${process.env.FE_ENV}/reset-password?token=${token}`, { message: null, token });
   },
   saveForgotPassword: async (req, res, next) => {
     try {
-      const { new_password } = req.body;
+      const { password } = req.body;
       const { token } = req.query;
 
       const validation = await Validator.validate(req.body, {
-        new_password: "required|string|between:8,255|confirmed",
+        password: "required|string|between:8,255|confirmed",
       });
 
       if (validation.failed) {
-        return res.render("auth/reset-password", {
-          message: "confirm password does not match!",
-          token,
+        return res.status(400).json({
+          success: false,
+          message: "Bad Request",
+          data: validation.errors,
         });
+        // return res.redirect(`${process.env.FE_ENV}/reset-password?token=${token}`, {
+        //   message: "confirm password does not match!",
+        // });
       }
 
       // buat service dan response di sini!
       if (!token) {
-        return res.render("auth/reset-password", {
-          message: "invalid token!",
-          token,
+        return res.status(403).json({
+          success: false,
+          message: "Token Invalid",
+          data: null,
         });
+        // return res.redirect(`${process.env.FE_ENV}/reset-password?token=${token}`, {
+        //   message: "invalid token!",
+        // });
       }
 
       const data = await jwt.verify(token, JWT_SECRET_KEY);
 
-      const hashPassword = await bcrypt.hash(new_password, 10);
+      const hashPassword = await bcrypt.hash(password, 10);
       const updated = await Customer.update(
         { password: hashPassword },
         { where: { id: data.id } }
       );
-      if (updated[0] == 0) {
-        return res.render("auth/reset-password", {
-          message: `reset password failed!`,
-          token,
-        });
-      }
 
-      return res.send("successfully changed the password");
+      // if (updated[0] == 0) {
+      //   return res.status(400).json({
+      //     success: false,
+      //     message: "Failed update password",
+      //     data: null,
+      //   });
+        // return res.render("auth/reset-password", {
+        //   message: `reset password failed!`,
+        //   token,
+        // });
+      // }
+
+      return res.status(200).json({
+        success: true,
+        message: "Success update password",
+        data: null,
+      });
     } catch (error) {
       next(error);
     }

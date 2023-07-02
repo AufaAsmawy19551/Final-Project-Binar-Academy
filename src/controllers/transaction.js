@@ -40,7 +40,7 @@ module.exports = {
         'customer_identity.email': 'required|email|between:1,255',
         'customer_identity.phone': 'required|numeric|digits_between:9,12',
         'customer_identity.title_id': 'required|integer|exist:Titles,id',
-        'customer_identity.family_name': 'required|string|between:1,255',
+        'customer_identity.family_name': 'string|between:1,255',
         'passenger_identity.*.flight_id': 'required|integer|exist:Flights,id',
         'passenger_identity.*.seat_id': 'required|integer|exist:Seats,id',
         'passenger_identity.*.passenger_title_id': 'required|integer|exist:Titles,id',

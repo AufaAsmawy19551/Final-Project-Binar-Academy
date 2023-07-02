@@ -238,9 +238,7 @@ module.exports = {
           id: customer.id,
         };
         const token = await jwt.sign(payload, JWT_SECRET_KEY);
-        const url = `${req.protocol}://${req.get(
-          "host"
-        )}/api/web/customer-auth/reset-password?token=${token}`;
+        const url = `${process.env.FE_ENV}/reset-password?token=${token}`;
 
         const html = await nodemailer.getHtml("resetPassword.ejs", {
           name: customer.name,

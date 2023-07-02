@@ -6,7 +6,7 @@ const { route } = require('../../utils/routeGrouping')
 module.exports = {
   async up(queryInterface, Sequelize) {
     const {routes} = require('./data/routeData.js')
-    const date = '2023-06-15T06:00:00.000Z';
+    const date = '2023-07-01T06:00:00.000Z';
     const numberDays= 30;
     const numberAirplanes= 30;
 

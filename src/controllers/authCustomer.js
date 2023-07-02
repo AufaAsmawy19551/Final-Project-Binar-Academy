@@ -66,6 +66,7 @@ module.exports = {
       const email = req.body.email;
 
       const validation = await Validator.validate(req.body, {
+        email: "required|email|between:1,255",
         otp_code: "required|numeric|digits:6",
       });
 

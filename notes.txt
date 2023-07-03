@@ -26,3 +26,20 @@ Dependencies:
 "supertest": "^6.3.3",
 "swagger-ui-express": "^4.6.3",
 "yaml": "^2.2.2"
+
+01 Country
+02 City
+03 Airport
+04 Route
+05 Class
+06 Airplane
+07 Facility
+08 Seat
+09 AirplaneFacility
+10 Flight
+11 Category
+12 Notification
+13 Customer
+14 CustomerNotification
+15 Transaction
+16 TransactionDetail 

@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const cors = require('cors');
 
 const indexRouter = require('./src/routes/index');
 
@@ -12,10 +13,12 @@ const app = express();
 app.set('views', path.join(__dirname, './src/views'));
 app.set('view engine', 'ejs');
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use('/images', express.static('./src/public/images/'));
 app.use(express.static(path.join(__dirname, './src/public')));
 
 app.use('/', indexRouter);

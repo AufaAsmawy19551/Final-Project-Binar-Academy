@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const documentation = require('./docs/documentation');
-const passenger = require('./service/passenger');
+const passenger = require('./service/customer');
 const admin = require('./service/admin');
 const web = require('./service/web');
 

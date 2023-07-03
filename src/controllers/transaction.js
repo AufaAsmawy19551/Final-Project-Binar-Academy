@@ -1,7 +1,8 @@
 const modelName = 'Transaction'
 const {
   Transaction: Model,
-  TransactionDetail,
+  TransactionDetail, 
+  Notification,
   Customer,
   sequelize,
 } = require('../database/models')
@@ -94,6 +95,17 @@ module.exports = {
       })
 
       await TransactionDetail.bulkCreate(passengers);
+
+      // create notification payment
+      const notification = await Notification.create({
+        category_id: 1,
+        title: "Segera Selesaikan Pembayaran Anda",
+        description: "Segera selesaikan pembayaran anda sebelum masa pembayaran anda expired!",
+        createdAt: new Date()      
+    })
+
+    // create customer notification payment
+    await Notification.create({customer_id: req.user.id, notification: notification})
 
       return res.status(200).json({
         success: true,
@@ -304,6 +316,17 @@ module.exports = {
           error: {},
         })
       }
+
+      // create notification payment
+      const notification = await Notification.create({
+          category_id: 1,
+          title:"Pembayaran Tiket",
+          description: "Pembayaran anda berhasil!",
+          createdAt: new Date()    
+      })
+
+      // create customer notification payment
+      await Notification.create({customer_id: req.user.id, notification: notification})
 
       return res.status(200).json({
         success: true,

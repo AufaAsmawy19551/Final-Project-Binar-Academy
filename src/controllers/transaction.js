@@ -99,9 +99,9 @@ module.exports = {
       // create notification payment
       const notification = await Notification.create({
         category_id: 1,
-        title:"Segera Selesaikan Pembayaran Anda",
+        title: "Segera Selesaikan Pembayaran Anda",
         description: "Segera selesaikan pembayaran anda sebelum masa pembayaran anda expired!",
-        createdAt: new Date(),      
+        createdAt: new Date()      
     })
 
     // create customer notification payment
@@ -322,7 +322,7 @@ module.exports = {
           category_id: 1,
           title:"Pembayaran Tiket",
           description: "Pembayaran anda berhasil!",
-          createdAt: new Date(),      
+          createdAt: new Date()    
       })
 
       // create customer notification payment

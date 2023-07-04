@@ -20,8 +20,8 @@ module.exports = {
         number_passenger: 'required|integer|min:1',
         class_id: 'required|integer|exist:Classes,id',
         is_promo: 'required|boolean',
-        is_round_trip: 'required|boolean',
-        return_date: 'required_if:is_round_trip,true|date',
+        // is_round_trip: 'required|boolean',
+        // return_date: 'required_if:is_round_trip,true|date',
       })
 
       if (validation.failed) {
@@ -162,76 +162,77 @@ module.exports = {
           },
         )
 
-        if(req.query.is_round_trip){
-          return_list = await sequelize.query(
-            `
-			      SELECT 
-              f.id,
-			      	dpA.name "departure_airport",
-			      	dpA.code "departure_airport_code",
-			      	dpC.name "departure_city",
-			      	dpC.code "departure_city_code",
-			      	dpC.time_zone "departure_city_time_zone",
-			      	f.departure_date,
-			      	arA.name "arrival_airport",
-			      	arA.code "arrival_airport_code",
-			      	arC.name "arrival_city",
-			      	arC.code "arrival_city_code",
-			      	arC.time_zone "arrival_city_time_zone",
-			      	f.arrival_date,
-			      	a.name "airplane_name",
-			      	a.logo "airplane_logo",
-			      	a.code "airplane_code",
-			      	c.name "airplane_class",
-			      	f.price,
-			      	f.discount,
-			      	f.tax,
-			      	f.stock - (
-                SELECT 
-                  COUNT(id)
-                FROM
-                  "TransactionDetails"
-                WHERE
-                  flight_id = f.id
-              ) "stock"
-			      FROM 
-			      	"Flights" f
-			      	INNER JOIN "Airports" dpA ON (f.departure_airport_id = dpA.id)
-			      	INNER JOIN "Airports" arA ON (f.arrival_airport_id = arA.id)
-			      	INNER JOIN "Airplanes" a ON (f.airplane_id = a.id)
-			      	INNER JOIN "Classes" c ON (a.class_id = c.id)
-			      	INNER JOIN "Cities" dpC ON (dpA.city_id = dpC.id)
-			      	INNER JOIN "Cities" arC ON (arA.city_id = arC.id)
-            WHERE
-              dpA.id = ${req.query.destination_airport_id}
-              AND arA.id = ${req.query.departure_airport_id}
-              AND c.id = ${req.query.class_id}
-              AND f.stock - (
-                SELECT 
-                  COUNT(id)
-                FROM
-                  "TransactionDetails"
-                WHERE
-                  flight_id = f.id
-              ) >= ${req.query.number_passenger}
-              AND f.departure_date::date = '${req.query.return_date}'
-            ORDER BY 
-              f.departure_date
-			      `,
-            {
-              type: sequelize.QueryTypes.SELECT,
-            },
-          )
-        }
+        // if(req.query.is_round_trip){
+        //   return_list = await sequelize.query(
+        //     `
+			  //     SELECT 
+        //       f.id,
+			  //     	dpA.name "departure_airport",
+			  //     	dpA.code "departure_airport_code",
+			  //     	dpC.name "departure_city",
+			  //     	dpC.code "departure_city_code",
+			  //     	dpC.time_zone "departure_city_time_zone",
+			  //     	f.departure_date,
+			  //     	arA.name "arrival_airport",
+			  //     	arA.code "arrival_airport_code",
+			  //     	arC.name "arrival_city",
+			  //     	arC.code "arrival_city_code",
+			  //     	arC.time_zone "arrival_city_time_zone",
+			  //     	f.arrival_date,
+			  //     	a.name "airplane_name",
+			  //     	a.logo "airplane_logo",
+			  //     	a.code "airplane_code",
+			  //     	c.name "airplane_class",
+			  //     	f.price,
+			  //     	f.discount,
+			  //     	f.tax,
+			  //     	f.stock - (
+        //         SELECT 
+        //           COUNT(id)
+        //         FROM
+        //           "TransactionDetails"
+        //         WHERE
+        //           flight_id = f.id
+        //       ) "stock"
+			  //     FROM 
+			  //     	"Flights" f
+			  //     	INNER JOIN "Airports" dpA ON (f.departure_airport_id = dpA.id)
+			  //     	INNER JOIN "Airports" arA ON (f.arrival_airport_id = arA.id)
+			  //     	INNER JOIN "Airplanes" a ON (f.airplane_id = a.id)
+			  //     	INNER JOIN "Classes" c ON (a.class_id = c.id)
+			  //     	INNER JOIN "Cities" dpC ON (dpA.city_id = dpC.id)
+			  //     	INNER JOIN "Cities" arC ON (arA.city_id = arC.id)
+        //     WHERE
+        //       dpA.id = ${req.query.destination_airport_id}
+        //       AND arA.id = ${req.query.departure_airport_id}
+        //       AND c.id = ${req.query.class_id}
+        //       AND f.stock - (
+        //         SELECT 
+        //           COUNT(id)
+        //         FROM
+        //           "TransactionDetails"
+        //         WHERE
+        //           flight_id = f.id
+        //       ) >= ${req.query.number_passenger}
+        //       AND f.departure_date::date = '${req.query.return_date}'
+        //     ORDER BY 
+        //       f.departure_date
+			  //     `,
+        //     {
+        //       type: sequelize.QueryTypes.SELECT,
+        //     },
+        //   )
+        // }
       }
 
       return res.status(200).json({
         success: true,
         message: `Success get list of ${modelName}s!`,
-        data: {
-          departure_flight: list,
-          return_flight: return_list
-        }
+        data: list
+        // data: {
+        //   departure_flight: list,
+        //   return_flight: return_list
+        // }
       })
     } catch (error) {
       next(error)

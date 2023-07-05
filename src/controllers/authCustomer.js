@@ -54,7 +54,7 @@ module.exports = {
         success: true,
         message: `Success create new ${modelName}!`,
         data: {
-          url: `${process.env.FE_ENV}/otp?email=${email}`
+          url: `/otp?email=${email}`
         },
       })
     } catch (error) {

@@ -104,7 +104,7 @@ module.exports = {
       }
 
       const token = await jwt.sign(payload, JWT_SECRET_KEY)
-      Customer.update({ token: token , verified: true}, { where: { id: customer.id } })
+      Customer.update({ token: token , email_verified: true}, { where: { id: customer.id } })
 
       // buat service dan response di sini!
       return res.status(200).json({

@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const nodemailer = require('../utils/nodemailer')
 const oauth2 = require('../utils/oauth2')
+const { where } = require('sequelize')
 const { JWT_SECRET_KEY } = process.env
 
 module.exports = {
@@ -175,6 +176,31 @@ module.exports = {
 
       const token = await jwt.sign(payload, JWT_SECRET_KEY)
       Customer.update({ token: token }, { where: { id: customer.id } })
+
+      if (!customer.email_verified) {
+        const generateOTP = `${Math.floor(100000 + Math.random() * 999999)}`
+        const saltRound = 10
+        const otpCode = await bcrypt.hash(generateOTP, saltRound);
+
+        await Customer.update({otp_code: otpCode}, {where: {email: customer.email}});
+
+        const html = await nodemailer.getHtml('otp.ejs', {
+          name: customer.name,
+          generateOTP,
+        })
+        
+        nodemailer.sendMail(customer.email, 'send OTP', html)
+
+        return res.status(200).json({
+          success: true,
+          message:
+            "Must send otp verification!",
+          data: {
+            url: `/otp?email=${email}`
+          },
+        })
+      }
+
       return res.status(200).json({
         success: true,
         message: 'login success!',

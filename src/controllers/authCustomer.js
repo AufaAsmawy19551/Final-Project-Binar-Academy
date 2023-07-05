@@ -53,7 +53,9 @@ module.exports = {
       return res.status(200).json({
         success: true,
         message: `Success create new ${modelName}!`,
-        data: {},
+        data: {
+          url: `${process.env.FE_ENV}/otp/${email}`
+        },
       })
     } catch (error) {
       next(error)

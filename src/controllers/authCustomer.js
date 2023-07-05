@@ -94,11 +94,23 @@ module.exports = {
         })
       }
 
+      const payload = {
+        id: customer.id,
+        name: customer.name,
+        type: 'customer',
+        email_verified: true,
+      }
+
+      const token = await jwt.sign(payload, JWT_SECRET_KEY)
+      Customer.update({ token: token , verified: true}, { where: { id: customer.id } })
+
       // buat service dan response di sini!
       return res.status(200).json({
         success: true,
         message: 'Success OTP code is valid',
-        data: null,
+        data: {
+          token: token
+        },
       })
     } catch (error) {
       next(error)

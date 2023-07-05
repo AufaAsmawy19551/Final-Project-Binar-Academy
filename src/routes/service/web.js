@@ -3,6 +3,7 @@ router = require('../../utils/routeGrouping');
 const middlewares = require('../../utils/middlewares');
 const authCustomer = require('../../controllers/authCustomer');
 const flight = require('../../controllers/flight');
+const flightTest = require('../../controllers/flightTest');
 const promo = require('../../controllers/promo');
 const kelas = require('../../controllers/class');
 const facility = require('../../controllers/facility');
@@ -30,6 +31,7 @@ router.prefix(
 		});
 
 		route.prefix('/flights', async (route) => {
+			route.get('/test', flightTest.index);
 			route.get('/', flight.index);
 			route.get('/:id', flight.show);
 		});

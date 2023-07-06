@@ -102,7 +102,7 @@ module.exports = {
         category_id: 1,
         title: "Segera Selesaikan Pembayaran Anda",
         description: "Segera selesaikan pembayaran anda sebelum masa pembayaran anda expired!",
-        createdAt: new Date()      
+        date: new Date()      
       })
 
       // create customer notification payment

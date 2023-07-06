@@ -322,7 +322,7 @@ module.exports = {
       const notification = await Notification.create({
           category_id: 1,
           title:"Pembayaran Tiket",
-          description: "Pembayaran anda berhasil!",
+          description: "Pembayaran Anda berhasil!",
           date: new Date()    
       })
 

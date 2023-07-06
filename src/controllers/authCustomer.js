@@ -387,14 +387,16 @@ module.exports = {
       email: customer.email,
     }
 
-    const token = await jwt.sign(payload, JWT_SECRET_KEY)
-    return res.status(200).json({
-      status: true,
-      message: 'login success!',
-      data: {
-        token: token,
-      },
-    })
+    const token = await jwt.sign(payload, JWT_SECRET_KEY);
+
+    return res.redirect(`${process.env.FE_ENV}/?token=${token}`);
+    // return res.status(200).json({
+    //   status: true,
+    //   message: 'login success!',
+    //   data: {
+    //     token: token,
+    //   },
+    // })
   },
 
   logout: async (req, res, next) => {

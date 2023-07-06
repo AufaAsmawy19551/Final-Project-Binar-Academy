@@ -50,7 +50,7 @@ module.exports = {
 
                 oauth2.userinfo.get((err, res) => {
                     if (err) {
-                        return reject(er);
+                        return reject(err);
                     } else {
                         return resolve(res);
                     }

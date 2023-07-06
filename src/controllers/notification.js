@@ -35,6 +35,8 @@ module.exports = {
 				  RIGHT JOIN "Categories" cat ON (n.category_id = cat.id)
 				WHERE 
 				  c.id = ${req.user.id}
+				ORDER BY 
+					n.date DESC
 				`,
 				{
 				  type: sequelize.QueryTypes.SELECT,

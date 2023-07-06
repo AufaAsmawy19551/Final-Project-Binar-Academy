@@ -26,7 +26,7 @@ module.exports = {
           data: validation.errors,
         })
       }
-      const generateOTP = `${Math.floor(100000 + Math.random() * 999999)}`
+      const generateOTP = `${Math.floor(Math.random() * 1000000)}`
       const saltRound = 10
       const otpCode = await bcrypt.hash(generateOTP, saltRound)
 
@@ -178,7 +178,7 @@ module.exports = {
       Customer.update({ token: token }, { where: { id: customer.id } })
 
       if (!customer.email_verified) {
-        const generateOTP = `${Math.floor(100000 + Math.random() * 999999)}`
+        const generateOTP = `${Math.floor(Math.random() * 1000000)}`
         const saltRound = 10
         const otpCode = await bcrypt.hash(generateOTP, saltRound);
 

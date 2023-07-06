@@ -51,6 +51,9 @@ module.exports = {
 
       nodemailer.sendMail(customer.email, 'send OTP', html)
 
+      // create customer notification payment
+      await CustomerNotification.create({customer_id: customer.id, notification_id: 2, is_read: false})
+
       return res.status(200).json({
         success: true,
         message: `Success create new ${modelName}!`,

@@ -1,10 +1,11 @@
 const modelName = 'Customer'
-const { Customer, sequelize } = require('../database/models')
+const { Customer, CustomerNotification, sequelize } = require('../database/models')
 const Validator = require('../utils/validatorjs')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const nodemailer = require('../utils/nodemailer')
 const oauth2 = require('../utils/oauth2')
+const { where } = require('sequelize')
 const { JWT_SECRET_KEY } = process.env
 
 module.exports = {
@@ -25,7 +26,7 @@ module.exports = {
           data: validation.errors,
         })
       }
-      const generateOTP = `${Math.floor(100000 + Math.random() * 999999)}`
+      const generateOTP = `${Math.floor(Math.random() * 1000000)}`
       const saltRound = 10
       const otpCode = await bcrypt.hash(generateOTP, saltRound)
 
@@ -50,10 +51,15 @@ module.exports = {
 
       nodemailer.sendMail(customer.email, 'send OTP', html)
 
+      // create customer notification payment
+      await CustomerNotification.create({customer_id: customer.id, notification_id: 2, is_read: false})
+
       return res.status(200).json({
         success: true,
         message: `Success create new ${modelName}!`,
-        data: {},
+        data: {
+          url: `/otp?email=${email}`
+        },
       })
     } catch (error) {
       next(error)
@@ -66,6 +72,7 @@ module.exports = {
       const email = req.body.email
 
       const validation = await Validator.validate(req.body, {
+        email: 'required|email',
         otp_code: 'required|numeric|digits:6',
       })
 
@@ -94,11 +101,23 @@ module.exports = {
         })
       }
 
+      const payload = {
+        id: customer.id,
+        name: customer.name,
+        type: 'customer',
+        email_verified: true,
+      }
+
+      const token = await jwt.sign(payload, JWT_SECRET_KEY)
+      Customer.update({ token: token , email_verified: true}, { where: { id: customer.id } })
+
       // buat service dan response di sini!
       return res.status(200).json({
         success: true,
         message: 'Success OTP code is valid',
-        data: null,
+        data: {
+          token: token
+        },
       })
     } catch (error) {
       next(error)
@@ -161,6 +180,31 @@ module.exports = {
 
       const token = await jwt.sign(payload, JWT_SECRET_KEY)
       Customer.update({ token: token }, { where: { id: customer.id } })
+
+      if (!customer.email_verified) {
+        const generateOTP = `${Math.floor(Math.random() * 1000000)}`
+        const saltRound = 10
+        const otpCode = await bcrypt.hash(generateOTP, saltRound);
+
+        await Customer.update({otp_code: otpCode}, {where: {email: customer.email}});
+
+        const html = await nodemailer.getHtml('otp.ejs', {
+          name: customer.name,
+          generateOTP,
+        })
+        
+        nodemailer.sendMail(customer.email, 'send OTP', html)
+
+        return res.status(200).json({
+          success: true,
+          message:
+            "Must send otp verification!",
+          data: {
+            url: `/otp?email=${email}`
+          },
+        })
+      }
+
       return res.status(200).json({
         success: true,
         message: 'login success!',
@@ -347,14 +391,16 @@ module.exports = {
       email: customer.email,
     }
 
-    const token = await jwt.sign(payload, JWT_SECRET_KEY)
-    return res.status(200).json({
-      status: true,
-      message: 'login success!',
-      data: {
-        token: token,
-      },
-    })
+    const token = await jwt.sign(payload, JWT_SECRET_KEY);
+
+    return res.redirect(`${process.env.FE_ENV}/?token=${token}`);
+    // return res.status(200).json({
+    //   status: true,
+    //   message: 'login success!',
+    //   data: {
+    //     token: token,
+    //   },
+    // })
   },
 
   logout: async (req, res, next) => {

@@ -3,6 +3,7 @@ const {
   Transaction: Model,
   TransactionDetail, 
   Notification,
+  CustomerNotification,
   Customer,
   sequelize,
 } = require('../database/models')
@@ -100,12 +101,12 @@ module.exports = {
       const notification = await Notification.create({
         category_id: 1,
         title: "Segera Selesaikan Pembayaran Anda",
-        description: "Segera selesaikan pembayaran anda sebelum masa pembayaran anda expired!",
-        createdAt: new Date()      
-    })
+        description: "Segera selesaikan pembayaran Anda sebelum expired!",
+        date: new Date()      
+      })
 
-    // create customer notification payment
-    await Notification.create({customer_id: req.user.id, notification: notification})
+      // create customer notification payment
+      await CustomerNotification.create({customer_id: req.user.id, notification_id: notification.id, is_read: false})
 
       return res.status(200).json({
         success: true,
@@ -321,12 +322,12 @@ module.exports = {
       const notification = await Notification.create({
           category_id: 1,
           title:"Pembayaran Tiket",
-          description: "Pembayaran anda berhasil!",
-          createdAt: new Date()    
+          description: "Pembayaran Anda berhasil!",
+          date: new Date()    
       })
 
       // create customer notification payment
-      await Notification.create({customer_id: req.user.id, notification: notification})
+      await CustomerNotification.create({customer_id: req.user.id, notification_id: notification.id, is_read: true})
 
       return res.status(200).json({
         success: true,

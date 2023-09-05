@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const documentation = require('./docs/documentation');
+// const documentation = require('./docs/documentation');
 const passenger = require('./service/customer');
 const admin = require('./service/admin');
 const web = require('./service/web');
@@ -15,7 +15,7 @@ router.prefix('/api', async (route) => {
 	route.use(web);
 	route.use(admin);
 	route.use(passenger);
-	route.use(documentation);
+	// route.use(documentation);
 });
 
 module.exports = router;

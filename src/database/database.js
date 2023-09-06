@@ -10,12 +10,12 @@ module.exports = {
     password: DB_PASSWORD,
     port: DB_PORT,
     dialect: DB_DIALECT,
-    dialectModule: pg,
-    dialectOptions: {
-      ssl: {
-        rejectUnauthorized: false, // Set to true in production
-      },
-    },
+    // dialectModule: pg,
+    // dialectOptions: {
+    //   ssl: {
+    //     rejectUnauthorized: false, // Set to true in production
+    //   },
+    // },
   },
   test: {
     host: DB_HOST,
@@ -24,12 +24,12 @@ module.exports = {
     password: DB_PASSWORD,
     port: DB_PORT,
     dialect: DB_DIALECT,
-    dialectModule: pg,
-    dialectOptions: {
-      ssl: {
-        rejectUnauthorized: false, // Set to true in production
-      },
-    },
+    // dialectModule: pg,
+    // dialectOptions: {
+    //   ssl: {
+    //     rejectUnauthorized: false, // Set to true in production
+    //   },
+    // },
   },
   production: {
     host: DB_HOST,
@@ -38,11 +38,11 @@ module.exports = {
     password: DB_PASSWORD,
     port: DB_PORT,
     dialect: DB_DIALECT,
-    dialectModule: pg,
-    dialectOptions: {
-      ssl: {
-        rejectUnauthorized: true, // Set to true in production
-      },
-    },
+    // dialectModule: pg,
+    // dialectOptions: {
+    //   ssl: {
+    //     rejectUnauthorized: true, // Set to true in production
+    //   },
+    // },
   },
 };

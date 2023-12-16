@@ -26,4 +26,4 @@ jobs:
       - name: Deploy
         run: railway up
         env:
-          RAILWAY_TOKEN: ${{ secrets.SITI_DEVELOPMENT_TOKEN }}
+          RAILWAY_TOKEN: --service ${{ secrets.SITI_DEVELOPMENT_TOKEN }}

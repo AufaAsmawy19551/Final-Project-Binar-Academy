@@ -1,5 +1,5 @@
 const modelName = 'Customer'
-const { Customer, CustomerNotification, sequelize } = require('../database/models')
+const { Customer, User, CustomerNotification, sequelize } = require('../database/models')
 const Validator = require('../utils/validatorjs')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')

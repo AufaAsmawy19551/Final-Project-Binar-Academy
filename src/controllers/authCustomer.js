@@ -1,5 +1,5 @@
 const modelName = 'Customer'
-const { Customer, User, CustomerNotification, sequelize } = require('../database/models')
+const { Customer, CustomerNotification, sequelize } = require('../database/models')
 const Validator = require('../utils/validatorjs')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -378,7 +378,7 @@ module.exports = {
 
     let customer = await Customer.findOne({ where: { email: data.email } })
     if (!customer) {
-      customer = await User.create({
+      customer = await Customer.create({
         name: data.name,
         email: data.email,
         user_type: 'google',

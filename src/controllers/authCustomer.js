@@ -1,38 +1,38 @@
-const modelName = 'Customer'
-const { Customer, CustomerNotification, sequelize } = require('../database/models')
-const Validator = require('../utils/validatorjs')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const nodemailer = require('../utils/nodemailer')
-const oauth2 = require('../utils/oauth2')
-const { where } = require('sequelize')
-const { JWT_SECRET_KEY } = process.env
+const modelName = 'Customer';
+const { Customer, CustomerNotification, sequelize } = require('../database/models');
+const Validator = require('../utils/validatorjs');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('../utils/nodemailer');
+const oauth2 = require('../utils/oauth2');
+const { where } = require('sequelize');
+const { JWT_SECRET_KEY } = process.env;
 
 module.exports = {
   register: async (req, res, next) => {
     try {
-      const { name, email, phone, password } = req.body
+      const { name, email, phone, password } = req.body;
       const validation = await Validator.validate(req.body, {
         name: 'required|string|between:1,255',
         email: 'required|email|between:1,255|unique:Customers,email',
         phone: 'required|numeric|digits_between:9,12|unique:Customers,phone',
         password: 'required|string|between:8,255|confirmed',
-      })
+      });
 
       if (validation.failed) {
         return res.status(400).json({
           success: false,
           message: 'Bad Request',
           data: validation.errors,
-        })
+        });
       }
-      const generateOTP = `${Math.floor(Math.random() * 1000000)}`
-      const saltRound = 10
-      const otpCode = await bcrypt.hash(generateOTP, saltRound)
+      const generateOTP = `${Math.floor(Math.random() * 1000000)}`;
+      const saltRound = 10;
+      const otpCode = await bcrypt.hash(generateOTP, saltRound);
 
       // buat service dan response di sini!
 
-      const hashPassword = await bcrypt.hash(password, 10)
+      const hashPassword = await bcrypt.hash(password, 10);
       const customer = await Customer.create({
         name: name,
         title_id: 1,
@@ -41,64 +41,68 @@ module.exports = {
         phone: phone,
         password: hashPassword,
         otp_code: otpCode,
-      })
-      console.log(customer)
+      });
+      console.log(customer);
 
       const html = await nodemailer.getHtml('otp.ejs', {
         name: customer.name,
         generateOTP,
-      })
+      });
 
-      nodemailer.sendMail(customer.email, 'send OTP', html)
+      nodemailer.sendMail(customer.email, 'send OTP', html);
 
       // create customer notification payment
-      await CustomerNotification.create({customer_id: customer.id, notification_id: 2, is_read: false})
+      await CustomerNotification.create({
+        customer_id: customer.id,
+        notification_id: 2,
+        is_read: false,
+      });
 
       return res.status(200).json({
         success: true,
         message: `Success create new ${modelName}!`,
         data: {
-          url: `/otp?email=${email}`
+          url: `/otp?email=${email}`,
         },
-      })
+      });
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
 
   saveOtp: async (req, res, next) => {
     try {
-      const { otp_code } = req.body
-      const email = req.body.email
+      const { otp_code } = req.body;
+      const email = req.body.email;
 
       const validation = await Validator.validate(req.body, {
         email: 'required|email',
         otp_code: 'required|numeric|digits:6',
-      })
+      });
 
       if (validation.failed) {
         return res.status(400).json({
           success: false,
           message: 'Bad Request',
           data: validation.errors,
-        })
+        });
       }
 
-      const customer = await Customer.findOne({ where: { email } })
+      const customer = await Customer.findOne({ where: { email } });
       if (!customer) {
         return res.status(400).json({
           success: false,
           message: 'Invalid email',
           data: null,
-        })
+        });
       }
-      const otpCorrect = await bcrypt.compare(otp_code, customer.otp_code)
+      const otpCorrect = await bcrypt.compare(otp_code, customer.otp_code);
       if (!otpCorrect) {
         return res.status(400).json({
           success: false,
           message: 'Invalid OTP code',
           data: null,
-        })
+        });
       }
 
       const payload = {
@@ -106,69 +110,67 @@ module.exports = {
         name: customer.name,
         type: 'customer',
         email_verified: true,
-      }
+      };
 
-      const token = await jwt.sign(payload, JWT_SECRET_KEY)
-      Customer.update({ token: token , email_verified: true}, { where: { id: customer.id } })
+      const token = await jwt.sign(payload, JWT_SECRET_KEY);
+      Customer.update({ token: token, email_verified: true }, { where: { id: customer.id } });
 
       // buat service dan response di sini!
       return res.status(200).json({
         success: true,
         message: 'Success OTP code is valid',
         data: {
-          token: token
+          token: token,
         },
-      })
+      });
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
 
   login: async (req, res, next) => {
     try {
-      const { email, password } = req.body
+      const { email, password } = req.body;
 
       const validation = await Validator.validate(req.body, {
         email: 'required|email|between:1,255',
         password: 'required|string|between:8,255',
-      })
+      });
 
       if (validation.failed) {
         return res.status(400).json({
           success: false,
           message: 'Bad Request',
           data: validation.errors,
-        })
+        });
       }
 
-      const customer = await Customer.findOne({ where: { email } })
+      const customer = await Customer.findOne({ where: { email } });
 
       if (!customer) {
         return res.status(400).json({
           success: false,
-          message:
-            "Haven't registered an account yet, please register an account first!",
+          message: "Haven't registered an account yet, please register an account first!",
           data: null,
-        })
+        });
       }
 
       if (customer.user_type == 'google' && !customer.password) {
         return res.status(400).json({
           status: false,
-          message:
-            'your accont is registered with google oauth, you need to login with google!',
+          message: 'your accont is registered with google oauth, you need to login with google!',
           data: null,
-        })
+        });
       }
 
-      const passwordCorrect = await bcrypt.compare(password, customer.password)
+      const passwordCorrect = await bcrypt.compare(password, customer.password);
 
       if (!passwordCorrect) {
         return res.status(400).json({
           success: false,
           message: 'Username or Password not valid!',
           data: null,
-        })
+        });
       }
 
       const payload = {
@@ -176,33 +178,32 @@ module.exports = {
         name: customer.name,
         type: 'customer',
         email_verified: customer.email_verified,
-      }
+      };
 
-      const token = await jwt.sign(payload, JWT_SECRET_KEY)
-      Customer.update({ token: token }, { where: { id: customer.id } })
+      const token = await jwt.sign(payload, JWT_SECRET_KEY);
+      Customer.update({ token: token }, { where: { id: customer.id } });
 
       if (!customer.email_verified) {
-        const generateOTP = `${Math.floor(Math.random() * 1000000)}`
-        const saltRound = 10
+        const generateOTP = `${Math.floor(Math.random() * 1000000)}`;
+        const saltRound = 10;
         const otpCode = await bcrypt.hash(generateOTP, saltRound);
 
-        await Customer.update({otp_code: otpCode}, {where: {email: customer.email}});
+        await Customer.update({ otp_code: otpCode }, { where: { email: customer.email } });
 
         const html = await nodemailer.getHtml('otp.ejs', {
           name: customer.name,
           generateOTP,
-        })
-        
-        nodemailer.sendMail(customer.email, 'send OTP', html)
+        });
+
+        nodemailer.sendMail(customer.email, 'send OTP', html);
 
         return res.status(200).json({
           success: true,
-          message:
-            "Must send otp verification!",
+          message: 'Must send otp verification!',
           data: {
-            url: `/otp?email=${email}`
+            url: `/otp?email=${email}`,
           },
-        })
+        });
       }
 
       return res.status(200).json({
@@ -211,9 +212,9 @@ module.exports = {
         data: {
           token: token,
         },
-      })
+      });
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
 
@@ -238,87 +239,87 @@ module.exports = {
         `,
         {
           type: sequelize.QueryTypes.SELECT,
-        },
-      )
+        }
+      );
 
       if (!details) {
         return res.status(404).json({
           success: false,
           message: `${modelName} with id ${req.user.id} not found!`,
           error: {},
-        })
+        });
       }
 
       return res.status(200).json({
         success: true,
         message: `Success get details of ${modelName} with id ${req.user.id}!`,
         data: details,
-      })
+      });
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
 
   requestForgotPassword: async (req, res, next) => {
     try {
-      const { email } = req.body
+      const { email } = req.body;
 
       const validation = await Validator.validate(req.body, {
         email: 'required|email',
-      })
+      });
 
       if (validation.failed) {
         return res.status(400).json({
           success: false,
           message: 'Bad Request',
           data: validation.errors,
-        })
+        });
       }
 
       // buat service dan response di sini!
-      const customer = await Customer.findOne({ where: { email } })
+      const customer = await Customer.findOne({ where: { email } });
       if (customer) {
         const payload = {
           id: customer.id,
-        }
-        const token = await jwt.sign(payload, JWT_SECRET_KEY)
-        const url = `${process.env.FE_ENV}/reset-password?token=${token}`
+        };
+        const token = await jwt.sign(payload, JWT_SECRET_KEY);
+        const url = `${process.env.FE_ENV}/reset-password?token=${token}`;
 
         const html = await nodemailer.getHtml('resetPassword.ejs', {
           name: customer.name,
           url,
-        })
-        nodemailer.sendMail(customer.email, 'Reset password request', html)
+        });
+        nodemailer.sendMail(customer.email, 'Reset password request', html);
       }
 
       return res.status(200).json({
         success: true,
         message: 'we will send a email if the email is registered!',
         data: null,
-      })
+      });
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
   resetPasswordPage: (req, res) => {
-    const { token } = req.query
+    const { token } = req.query;
     // return res.redirect(`${process.env.FE_ENV}/reset-password?token=${token}`, { message: null, token });
   },
   saveForgotPassword: async (req, res, next) => {
     try {
-      const { password } = req.body
-      const { token } = req.query
+      const { password } = req.body;
+      const { token } = req.query;
 
       const validation = await Validator.validate(req.body, {
         password: 'required|string|between:8,255|confirmed',
-      })
+      });
 
       if (validation.failed) {
         return res.status(400).json({
           success: false,
           message: 'Bad Request',
           data: validation.errors,
-        })
+        });
         // return res.redirect(`${process.env.FE_ENV}/reset-password?token=${token}`, {
         //   message: "confirm password does not match!",
         // });
@@ -330,19 +331,16 @@ module.exports = {
           success: false,
           message: 'Token Invalid',
           data: null,
-        })
+        });
         // return res.redirect(`${process.env.FE_ENV}/reset-password?token=${token}`, {
         //   message: "invalid token!",
         // });
       }
 
-      const data = await jwt.verify(token, JWT_SECRET_KEY)
+      const data = await jwt.verify(token, JWT_SECRET_KEY);
 
-      const hashPassword = await bcrypt.hash(password, 10)
-      const updated = await Customer.update(
-        { password: hashPassword },
-        { where: { id: data.id } },
-      )
+      const hashPassword = await bcrypt.hash(password, 10);
+      const updated = await Customer.update({ password: hashPassword }, { where: { id: data.id } });
 
       // if (updated[0] == 0) {
       //   return res.status(400).json({
@@ -360,69 +358,73 @@ module.exports = {
         success: true,
         message: 'Success update password',
         data: null,
-      })
+      });
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
 
   googleOauth2: async (req, res) => {
-    const { code } = req.query
-    if (!code) {
-      const googleLoginUrl = oauth2.generateAuthUrl()
-      return res.redirect(googleLoginUrl)
+    try {
+      const { code } = req.query;
+      if (!code) {
+        const googleLoginUrl = oauth2.generateAuthUrl();
+        return res.redirect(googleLoginUrl);
+      }
+
+      await oauth2.setCreadentials(code);
+      const { data } = await oauth2.getUserData();
+
+      let customer = await Customer.findOne({ where: { email: data.email } });
+      if (!customer) {
+        customer = await Customer.create({
+          name: data.name,
+          email: data.email,
+          user_type: 'google',
+        });
+      }
+
+      const payload = {
+        id: customer.id,
+        name: customer.name,
+        email: customer.email,
+      };
+
+      const token = await jwt.sign(payload, JWT_SECRET_KEY);
+
+      return res.redirect(`${process.env.FE_ENV}/?token=${token}`);
+      // return res.status(200).json({
+      //   status: true,
+      //   message: 'login success!',
+      //   data: {
+      //     token: token,
+      //   },
+      // })
+    } catch (error) {
+      next(error);
     }
-
-    await oauth2.setCreadentials(code)
-    const { data } = await oauth2.getUserData()
-
-    let customer = await Customer.findOne({ where: { email: data.email } })
-    if (!customer) {
-      customer = await Customer.create({
-        name: data.name,
-        email: data.email,
-        user_type: 'google',
-      })
-    }
-
-    const payload = {
-      id: customer.id,
-      name: customer.name,
-      email: customer.email,
-    }
-
-    const token = await jwt.sign(payload, JWT_SECRET_KEY);
-
-    return res.redirect(`${process.env.FE_ENV}/?token=${token}`);
-    // return res.status(200).json({
-    //   status: true,
-    //   message: 'login success!',
-    //   data: {
-    //     token: token,
-    //   },
-    // })
   },
 
   logout: async (req, res, next) => {
     try {
-      const validation = await Validator.validate(req.query, {})
+      const validation = await Validator.validate(req.query, {});
 
       if (validation.failed) {
         return res.status(400).json({
           success: false,
           message: 'Bad Request',
           data: validation.errors,
-        })
+        });
       }
 
-      Customer.update({ token: null }, { where: { id: req.user.id } })
+      Customer.update({ token: null }, { where: { id: req.user.id } });
       return res.status(200).json({
         success: true,
         message: 'Logout Successful',
         data: null,
-      })
+      });
     } catch (error) {
-      next(error)
+      next(error);
     }
   },
-}
+};
